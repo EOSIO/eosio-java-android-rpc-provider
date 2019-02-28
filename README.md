@@ -1,0 +1,1 @@
+# eosio-java-android-rpc-provider
