@@ -4,13 +4,13 @@
 
 ## Contributing
 
-[Contributing Guide](https://github.com/EOSIO/eosio-java-android-rpc-provider/blob/master/CONTRIBUTING.md)
+[Contributing Guide](./CONTRIBUTING.md)
 
-[Code of Conduct](https://github.com/EOSIO/eosio-java-android-rpc-provider/blob/master/CONTRIBUTING.md#conduct)
+[Code of Conduct](./CONTRIBUTING.md#conduct)
 
 ## License
 
-[MIT](https://github.com/EOSIO/{{githubRepo}}/blob/develop/LICENSE)
+[MIT](./LICENSE)
 
 ## Important
 
