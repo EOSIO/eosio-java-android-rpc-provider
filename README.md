@@ -1,4 +1,4 @@
-# EOSIO Java Android RPC Provider
+# EOSIO SDK for Java Android RPC Provider
 
 ## Overview
 
