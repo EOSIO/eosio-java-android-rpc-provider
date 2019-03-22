@@ -1,4 +1,4 @@
-# EOSIO SDK for Java Android RPC Provider
+# EOSIO SDK for Java Android RPC Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
 
 ## Overview
 
