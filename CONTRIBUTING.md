@@ -98,11 +98,11 @@ Examples of unacceptable behavior include:
 - Publishing others’ private information, such as a physical or electronic address, without explicit permission
 - Other conduct which could reasonably be considered inappropriate in a professional setting
 
+
+
 ## Contributor License & Acknowledgments
 
-This repository contains a notice of a license (MIT), and in accordance with [GitHub’s Terms of Service](https://help.github.com/articles/github-terms-of-service/), whenever you make a contribution to this project, you license your contribution under the same terms, and you agree that you have the right to license your contribution under those terms. 
-
-Whenever you make a contribution to this project, you also certify in the terms of the Developer’s Certificate of Origin set out below:
+Whenever you make a contribution to this project, you license your contribution under the same terms as set out in LICENSE, and you represent and warrant that you have the right to license your contribution under those terms.  Whenever you make a contribution to this project, you also certify in the terms of the Developer’s Certificate of Origin set out below:
 
 ```
 Developer Certificate of Origin
@@ -120,7 +120,7 @@ license document, but changing it is not allowed.
 Developer's Certificate of Origin 1.1
 
 By making a contribution to this project, I certify that:
-eosio-java-android-rpc-provider
+
 (a) The contribution was created in whole or in part by me and I
     have the right to submit it under the open source license
     indicated in the file; or
