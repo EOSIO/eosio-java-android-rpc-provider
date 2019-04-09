@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.runner.AndroidJUnit4;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.math.BigInteger;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
@@ -29,7 +31,10 @@ import one.block.eosiojava.models.rpcProvider.response.GetInfoResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
+import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
+import one.block.eosiojava.models.rpcProvider.response.RpcError;
 import one.block.eosiojava.session.TransactionProcessor;
+import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.implementations.EosioJavaRpcProviderImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -67,7 +72,7 @@ public class EosioRpcProviderInstrumentedTest {
             assertEquals("0f6695cb", response.getServerVersion());
             assertEquals("v1.3.0", response.getServerVersionString());
         } catch (Exception ex) {
-            fail("Should not get exception when calling getInfo(): " + ex.getLocalizedMessage());
+            fail("Should not get exception when calling getInfo(): " + "\n" + getStackTraceString(ex));
         } finally {
             try {
                 server.shutdown();
@@ -99,7 +104,8 @@ public class EosioRpcProviderInstrumentedTest {
             assertEquals("de5493939e3abdca80deeab2fc9389cc43dc1982708653cfe6b225eb788d6659",
                     response.getActionMroot());
         } catch (Exception ex) {
-            fail("Should not get exception when calling getBlock(): " + ex.getLocalizedMessage());
+            fail("Should not get exception when calling getBlock(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
         } finally {
             try {
                 server.shutdown();
@@ -130,7 +136,8 @@ public class EosioRpcProviderInstrumentedTest {
             assertEquals("DmVvc2lvOjphYmkvMS4wAQxhY2NvdW50X25hbWUEbmFtZQUIdHJhbnNmZXIABARmcm9tDGFjY291bnRfbmFtZQJ0bwxhY2NvdW50X25hbWUIcXVhbnRpdHkFYXNzZXQEbWVtbwZzdHJpbmcGY3JlYXRlAAIGaXNzdWVyDGFjY291bnRfbmFtZQ5tYXhpbXVtX3N1cHBseQVhc3NldAVpc3N1ZQADAnRvDGFjY291bnRfbmFtZQhxdWFudGl0eQVhc3NldARtZW1vBnN0cmluZwdhY2NvdW50AAEHYmFsYW5jZQVhc3NldA5jdXJyZW5jeV9zdGF0cwADBnN1cHBseQVhc3NldAptYXhfc3VwcGx5BWFzc2V0Bmlzc3VlcgxhY2NvdW50X25hbWUDAAAAVy08zc0IdHJhbnNmZXK8By0tLQp0aXRsZTogVG9rZW4gVHJhbnNmZXIKc3VtbWFyeTogVHJhbnNmZXIgdG9rZW5zIGZyb20gb25lIGFjY291bnQgdG8gYW5vdGhlci4KaWNvbjogaHR0cHM6Ly9jZG4udGVzdG5ldC5kZXYuYjFvcHMubmV0L3Rva2VuLXRyYW5zZmVyLnBuZyNjZTUxZWY5ZjllZWNhMzQzNGU4NTUwN2UwZWQ0OWU3NmZmZjEyNjU0MjJiZGVkMDI1NWYzMTk2ZWE1OWM4YjBjCi0tLQoKIyMgVHJhbnNmZXIgVGVybXMgJiBDb25kaXRpb25zCgpJLCB7e2Zyb219fSwgY2VydGlmeSB0aGUgZm9sbG93aW5nIHRvIGJlIHRydWUgdG8gdGhlIGJlc3Qgb2YgbXkga25vd2xlZGdlOgoKMS4gSSBjZXJ0aWZ5IHRoYXQge3txdWFudGl0eX19IGlzIG5vdCB0aGUgcHJvY2VlZHMgb2YgZnJhdWR1bGVudCBvciB2aW9sZW50IGFjdGl2aXRpZXMuCjIuIEkgY2VydGlmeSB0aGF0LCB0byB0aGUgYmVzdCBvZiBteSBrbm93bGVkZ2UsIHt7dG99fSBpcyBub3Qgc3VwcG9ydGluZyBpbml0aWF0aW9uIG9mIHZpb2xlbmNlIGFnYWluc3Qgb3RoZXJzLgozLiBJIGhhdmUgZGlzY2xvc2VkIGFueSBjb250cmFjdHVhbCB0ZXJtcyAmIGNvbmRpdGlvbnMgd2l0aCByZXNwZWN0IHRvIHt7cXVhbnRpdHl9fSB0byB7e3RvfX0uCgpJIHVuZGVyc3RhbmQgdGhhdCBmdW5kcyB0cmFuc2ZlcnMgYXJlIG5vdCByZXZlcnNpYmxlIGFmdGVyIHRoZSB7eyR0cmFuc2FjdGlvbi5kZWxheV9zZWN9fSBzZWNvbmRzIG9yIG90aGVyIGRlbGF5IGFzIGNvbmZpZ3VyZWQgYnkge3tmcm9tfX0ncyBwZXJtaXNzaW9ucy4KCklmIHRoaXMgYWN0aW9uIGZhaWxzIHRvIGJlIGlycmV2ZXJzaWJseSBjb25maXJtZWQgYWZ0ZXIgcmVjZWl2aW5nIGdvb2RzIG9yIHNlcnZpY2VzIGZyb20gJ3t7dG99fScsIEkgYWdyZWUgdG8gZWl0aGVyIHJldHVybiB0aGUgZ29vZHMgb3Igc2VydmljZXMgb3IgcmVzZW5kIHt7cXVhbnRpdHl9fSBpbiBhIHRpbWVseSBtYW5uZXIuAAAAAAClMXYFaXNzdWUAAAAAAKhs1EUGY3JlYXRlAAIAAAA4T00RMgNpNjQBCGN1cnJlbmN5AQZ1aW50NjQHYWNjb3VudAAAAAAAkE3GA2k2NAEIY3VycmVuY3kBBnVpbnQ2NA5jdXJyZW5jeV9zdGF0cwAAAAA==",
                     response.getAbi());
         } catch (Exception ex) {
-            fail("Should not get exception when calling getRawAbi(): " + ex.getLocalizedMessage());
+            fail("Should not get exception when calling getRawAbi(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
         } finally {
             try {
                 server.shutdown();
@@ -162,7 +169,8 @@ public class EosioRpcProviderInstrumentedTest {
             assertEquals("EOS5j67P1W2RyBXAL8sNzYcDLox3yLpxyrxgkYy1xsXzVCvzbYpba",
                     response.getRequiredKeys().get(0));
         } catch (Exception ex) {
-            fail("Should not get exception when calling getRequiredKeys(): " + ex.getLocalizedMessage());
+            fail("Should not get exception when calling getRequiredKeys(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
         } finally {
             try {
                 server.shutdown();
@@ -197,7 +205,8 @@ public class EosioRpcProviderInstrumentedTest {
             assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a",
                     response.getTransactionId());
         } catch (Exception ex) {
-            fail("Should not get exception when calling pushTransaction(): " + ex.getLocalizedMessage());
+            fail("Should not get exception when calling pushTransaction(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
         } finally {
             try {
                 server.shutdown();
@@ -232,23 +241,15 @@ public class EosioRpcProviderInstrumentedTest {
         } catch (Exception ex) {
             assertEquals("Error pushing transaction.", ex.getLocalizedMessage());
             assertNotNull(ex.getCause());
-            assertEquals("Bad status code: 500 (Server Error), returned from server. Additional error information: {\n"
-                    + "    \"code\": 500,\n"
-                    + "    \"message\": \"Internal Service Error\",\n"
-                    + "    \"error\": {\n"
-                    + "        \"code\": 3040005,\n"
-                    + "        \"name\": \"expired_tx_exception\",\n"
-                    + "        \"what\": \"Expired Transaction\",\n"
-                    + "        \"details\": [\n"
-                    + "            {\n"
-                    + "                \"message\": \"expired transaction ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-                    + "                \"file\": \"producer_plugin.cpp\",\n"
-                    + "                \"line_number\": 378,\n"
-                    + "                \"method\": \"on_incoming_transaction_async\"\n"
-                    + "            }\n"
-                    + "        ]\n"
-                    + "    }\n"
-                    + "}", ex.getCause().getMessage());
+            assertEquals("Bad status code: 500 (Server Error), returned from server. Additional error information: See further error information in RPCProviderError.", ex.getCause().getMessage());
+            RPCResponseError rpcResponseError = ((EosioJavaRpcProviderCallError)ex.getCause()).getRpcResponseError();
+            assertNotNull(rpcResponseError);
+            assertEquals(new BigInteger("500"), rpcResponseError.getCode());
+            assertEquals("Internal Service Error", rpcResponseError.getMessage());
+            RpcError rpcError = rpcResponseError.getError();
+            assertNotNull(rpcError);
+            assertEquals(new BigInteger("3040005"), rpcError.getCode());
+            assertEquals("Expired Transaction", rpcError.getWhat());
         } finally {
             try {
                 server.shutdown();
@@ -352,6 +353,13 @@ public class EosioRpcProviderInstrumentedTest {
             }
         }
 
+    }
+
+    private String getStackTraceString(Exception ex) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+        ex.printStackTrace(printWriter);
+        return stringWriter.toString();
     }
 
     private List<String> availableKeys() {

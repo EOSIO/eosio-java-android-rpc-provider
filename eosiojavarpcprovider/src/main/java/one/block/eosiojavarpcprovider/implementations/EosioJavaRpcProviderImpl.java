@@ -1,5 +1,6 @@
 package one.block.eosiojavarpcprovider.implementations;
 
+import com.google.gson.Gson;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
 import one.block.eosiojava.error.rpcProvider.GetBlockRpcError;
@@ -17,6 +18,8 @@ import one.block.eosiojava.models.rpcProvider.response.GetInfoResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
+import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
+import one.block.eosiojava.models.rpcProvider.response.RpcError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcErrorConstants;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError;
@@ -84,11 +87,22 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
     private <O> O processCall(Call<O> call) throws Exception {
         Response<O> response = call.execute();
         if (!response.isSuccessful()) {
-            String additionalErrInfo = (response.errorBody() == null) ? EosioJavaRpcErrorConstants.RPC_PROVIDER_NO_FURTHER_ERROR_INFO :
-                    response.errorBody().string();
+            String additionalErrInfo = EosioJavaRpcErrorConstants.RPC_PROVIDER_NO_FURTHER_ERROR_INFO;
+
+            RPCResponseError rpcResponseError = null;
+            if (response.errorBody() != null) {
+                Gson gson = new Gson();
+                rpcResponseError = gson.fromJson(response.errorBody().charStream(), RPCResponseError.class);
+                if (rpcResponseError == null) {
+                    additionalErrInfo = response.errorBody().string();
+                } else {
+                    additionalErrInfo = EosioJavaRpcErrorConstants.RPC_PROVIDER_SEE_FURTHER_ERROR_INFO;
+                }
+            }
+
             String msg = String.format(Locale.getDefault(), EosioJavaRpcErrorConstants.RPC_PROVIDER_BAD_STATUS_CODE_RETURNED,
                     response.code(), response.message(), additionalErrInfo);
-            throw new EosioJavaRpcProviderCallError(msg);
+            throw new EosioJavaRpcProviderCallError(msg, rpcResponseError);
         }
         if (response.body() == null) {
             throw new EosioJavaRpcProviderCallError(EosioJavaRpcErrorConstants.RPC_PROVIDER_EMPTY_RESPONSE_RETURNED);

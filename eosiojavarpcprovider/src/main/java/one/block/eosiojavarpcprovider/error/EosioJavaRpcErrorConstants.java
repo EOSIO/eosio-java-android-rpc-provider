@@ -24,6 +24,7 @@ public class EosioJavaRpcErrorConstants {
     public static final String RPC_PROVIDER_BAD_STATUS_CODE_RETURNED = "Bad status code: %d (%s), returned from server. Additional error information: %s";
     public static final String RPC_PROVIDER_EMPTY_RESPONSE_RETURNED = "Empty response returned from the server.";
     public static final String RPC_PROVIDER_NO_FURTHER_ERROR_INFO = "No further error information available.";
+    public static final String RPC_PROVIDER_SEE_FURTHER_ERROR_INFO = "See further error information in RPCProviderError.";
 
     // endregion
 
