@@ -3,6 +3,8 @@ package one.block.eosiojavarpcprovider.implementations;
 import com.google.gson.Gson;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
 import one.block.eosiojava.error.rpcProvider.GetBlockRpcError;
 import one.block.eosiojava.error.rpcProvider.GetInfoRpcError;
 import one.block.eosiojava.error.rpcProvider.GetRawAbiRpcError;
@@ -20,6 +22,7 @@ import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
 import one.block.eosiojava.models.rpcProvider.response.RpcError;
+import one.block.eosiojavarpcprovider.BuildConfig;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcErrorConstants;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError;
@@ -30,10 +33,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 //
-// EosioJavaRpcProviderImpl
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/5/19
 // Copyright © 2017-2019 block.one.
 //
 
@@ -65,6 +64,12 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
 
         this.baseURL = baseURL;
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(Level.BASIC);
+            httpClient.addInterceptor(httpLoggingInterceptor);
+        }
+
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(this.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
