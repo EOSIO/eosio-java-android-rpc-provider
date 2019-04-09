@@ -1,9 +1,5 @@
 package one.block.eosiojavarpcprovider.error;
 //
-// EosioJavaRpcErrorConstants
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/5/19
 // Copyright © 2017-2019 block.one.
 //
 

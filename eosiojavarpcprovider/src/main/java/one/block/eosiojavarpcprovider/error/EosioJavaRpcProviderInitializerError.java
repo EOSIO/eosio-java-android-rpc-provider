@@ -4,10 +4,6 @@ import one.block.eosiojava.error.rpcProvider.RpcProviderError;
 import org.jetbrains.annotations.NotNull;
 
 //
-// EosioJavaRpcProviderInitializerError
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/5/19
 // Copyright © 2017-2019 block.one.
 //
 

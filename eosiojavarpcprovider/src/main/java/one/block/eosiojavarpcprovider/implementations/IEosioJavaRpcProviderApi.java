@@ -1,9 +1,5 @@
 package one.block.eosiojavarpcprovider.implementations;
 //
-// IEosioJavaRpcProviderApi
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/5/19
 // Copyright © 2017-2019 block.one.
 //
 

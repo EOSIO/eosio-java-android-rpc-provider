@@ -6,10 +6,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 //
-// EosioJavaRpcProviderCallError
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/8/19
 // Copyright © 2017-2019 block.one.
 //
 

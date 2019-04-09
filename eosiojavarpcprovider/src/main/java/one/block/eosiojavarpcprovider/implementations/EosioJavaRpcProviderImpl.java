@@ -3,6 +3,8 @@ package one.block.eosiojavarpcprovider.implementations;
 import com.google.gson.Gson;
 import java.util.Locale;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.logging.HttpLoggingInterceptor.Level;
 import one.block.eosiojava.error.rpcProvider.GetBlockRpcError;
 import one.block.eosiojava.error.rpcProvider.GetInfoRpcError;
 import one.block.eosiojava.error.rpcProvider.GetRawAbiRpcError;
@@ -20,6 +22,7 @@ import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
 import one.block.eosiojava.models.rpcProvider.response.RpcError;
+import one.block.eosiojavarpcprovider.BuildConfig;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcErrorConstants;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError;
@@ -30,10 +33,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 //
-// EosioJavaRpcProviderImpl
-// eosio-java-android-rpc-provider
-//
-// Created by mccoole on 4/5/19
 // Copyright © 2017-2019 block.one.
 //
 
@@ -65,6 +64,12 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
 
         this.baseURL = baseURL;
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(Level.BASIC);
+            httpClient.addInterceptor(httpLoggingInterceptor);
+        }
+
         this.retrofit = new Retrofit.Builder()
                 .baseUrl(this.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -119,8 +124,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
     public @NotNull GetInfoResponse getInfo() throws GetInfoRpcError {
         try {
             Call<GetInfoResponse> syncCall = this.rpcProviderApi.getInfo();
-            GetInfoResponse response = processCall(syncCall);
-            return response;
+            return processCall(syncCall);
         } catch (Exception ex) {
             throw new GetInfoRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GETTING_CHAIN_INFO,
                     ex);
@@ -138,8 +142,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
             throws GetBlockRpcError {
         try {
             Call<GetBlockResponse> syncCall = this.rpcProviderApi.getBlock(getBlockRequest);
-            GetBlockResponse response = processCall(syncCall);
-            return response;
+            return processCall(syncCall);
         } catch (Exception ex) {
             throw new GetBlockRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GETTING_BLOCK_INFO,
                     ex);
@@ -157,8 +160,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
             throws GetRawAbiRpcError {
         try {
             Call<GetRawAbiResponse> syncCall = this.rpcProviderApi.getRawAbi(getRawAbiRequest);
-            GetRawAbiResponse response = processCall(syncCall);
-            return response;
+            return processCall(syncCall);
         } catch (Exception ex) {
             throw new GetRawAbiRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GETTING_RAW_ABI,
                     ex);
@@ -176,8 +178,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
             GetRequiredKeysRequest getRequiredKeysRequest) throws GetRequiredKeysRpcError {
         try {
             Call<GetRequiredKeysResponse> syncCall = this.rpcProviderApi.getRequiredKeys(getRequiredKeysRequest);
-            GetRequiredKeysResponse response = processCall(syncCall);
-            return response;
+            return processCall(syncCall);
         } catch (Exception ex) {
             throw new GetRequiredKeysRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GETTING_REQUIRED_KEYS,
                     ex);
@@ -195,8 +196,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
             PushTransactionRequest pushTransactionRequest) throws PushTransactionRpcError {
         try {
             Call<PushTransactionResponse> syncCall = this.rpcProviderApi.pushTransaction(pushTransactionRequest);
-            PushTransactionResponse response = processCall(syncCall);
-            return response;
+            return processCall(syncCall);
         } catch (Exception ex) {
             throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_PUSHING_TRANSACTION,
                     ex);
