@@ -3,6 +3,10 @@
 ![Language Java](https://img.shields.io/badge/Language-Java-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
+An Android [RPC provider](https://github.com/EOSIO/eosio-java/tree/master#rpc-provider-protocol) implementation for use within [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a plugin. RPC providers are responsible for all [RPC calls to nodeos](https://developers.eos.io/eosio-nodeos/reference), as well as general network handling. 
+
+_All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them._
+
 ## Contents
 
 - [Prerequisites](#prerequisites)
