@@ -1,0 +1,19 @@
+steps:
+
+  - command: "gradle test"
+    label: "Test Library"
+    agents:
+      - "queue=automation-android-builder-fleet"
+
+  - command: "gradle assemble"
+    label: "Build Library"
+    agents:
+      - "queue=automation-android-builder-fleet"
+    artifact_paths: 
+      - "*.aar" 
+  - wait
+
+  - command: "echo 'Success!!'"
+    label: ":trophy: Success"
+    agents:
+      - "queue=automation-android-builder-fleet"
