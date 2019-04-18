@@ -211,225 +211,255 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
     /**
      * Issue a get_account call to the blockchain and process the response.
      * @param requestBody request body of get_account API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getAccount(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getAccount(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getAccount(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ACCOUNT, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ACCOUNT, ex);
         }
     }
 
     /**
      * Issue a push_transactions call to the blockchain and process the response.
      * @param requestBody request body of push_transactions API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody pushTransactions(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String pushTransactions(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.pushTransactions(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_PUSHING_TRANSACTIONS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_PUSHING_TRANSACTIONS, ex);
         }
     }
 
     /**
      * Issue a get_block_header_state call to the blockchain and process the response.
      * @param requestBody request body of get_block_header_state API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getBlockHeaderState(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getBlockHeaderState(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getBlockHeaderState(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_BLOCK_HEADER_STATE, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_BLOCK_HEADER_STATE, ex);
         }
     }
 
     /**
      * Issue a get_abi call to the blockchain and process the response.
      * @param requestBody request body of get_abi API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getAbi(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getAbi(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getAbi(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ABI, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ABI, ex);
         }
     }
 
     /**
      * Issue a get_currency_balance call to the blockchain and process the response.
      * @param requestBody request body of get_currency_balance API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getCurrencyBalance(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getCurrencyBalance(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getCurrencyBalance(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CURRENT_BALANCE, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CURRENT_BALANCE, ex);
         }
     }
 
     /**
      * Issue a get_currency_stats call to the blockchain and process the response.
      * @param requestBody request body of get_currency_stats API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getCurrencyStats(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getCurrencyStats(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getCurrencyStats(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CURRENT_STATS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CURRENT_STATS, ex);
         }
     }
 
     /**
      * Issue a get_producers call to the blockchain and process the response.
      * @param requestBody request body of get_producers API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getProducers(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getProducers(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getProducers(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_PRODUCERS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_PRODUCERS, ex);
         }
     }
 
     /**
      * Issue a get_raw_code_and_abi call to the blockchain and process the response.
      * @param requestBody request body of get_raw_code_and_abi API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getRawCodeAndAbi(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getRawCodeAndAbi(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getRawCodeAndAbi(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_RAW_CODE_AND_ABI, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_RAW_CODE_AND_ABI, ex);
         }
     }
 
     /**
      * Issue a get_table_by_scope call to the blockchain and process the response.
      * @param requestBody request body of get_table_by_scope API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getTableByScope(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getTableByScope(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getTableByScope(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TABLE_BY_SCOPE, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TABLE_BY_SCOPE, ex);
         }
     }
 
     /**
      * Issue a get_table_rows call to the blockchain and process the response.
      * @param requestBody request body of get_table_rows API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getTableRows(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getTableRows(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getTableRows(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TABLE_ROWS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TABLE_ROWS, ex);
         }
     }
 
     /**
      * Issue a get_code call to the blockchain and process the response.
      * @param requestBody request body of get_code API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getCode(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getCode(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getCode(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CODE, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CODE, ex);
         }
     }
 
     /**
      * Issue a get_actions call to the blockchain and process the response.
      * @param requestBody request body of get_actions API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getActions(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getActions(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getActions(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ACTION, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_ACTION, ex);
         }
     }
 
     /**
      * Issue a get_transaction call to the blockchain and process the response.
      * @param requestBody request body of get_transaction API
-     * @return - ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @return - String content of ResponseBody on successful return.
+     * @throws String - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getTransaction(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getTransaction(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getTransaction(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TRANSACTION, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_TRANSACTION, ex);
         }
     }
 
     /**
      * Issue a get_key_accounts call to the blockchain and process the response.
      * @param requestBody request body of get_key_accounts API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getKeyAccounts(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getKeyAccounts(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getKeyAccounts(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_KEY_ACCOUNTS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_KEY_ACCOUNTS, ex);
         }
     }
 
     /**
      * Issue a get_controlled_accounts call to the blockchain and process the response.
      * @param requestBody request body of get_controlled_accounts API
-     * @return - ResponseBody on successful return.
+     * @return - String content of ResponseBody on successful return.
      * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
      */
-    public @NotNull ResponseBody getControlledAccounts(RequestBody requestBody) throws RpcProviderError {
+    public @NotNull String getControlledAccounts(RequestBody requestBody) throws RpcProviderError {
         try {
             Call<ResponseBody> syncCall = this.rpcProviderApi.getControlledAccounts(requestBody);
-            return processCall(syncCall);
+            try(ResponseBody responseBody = processCall(syncCall)) {
+                return responseBody.string();
+            }
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CONTROLLED_ACCOUNTS, ex);
+            throw new RpcProviderError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_GET_CONTROLLED_ACCOUNTS, ex);
         }
     }
 }
