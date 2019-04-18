@@ -212,7 +212,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_account call to the blockchain and process the response.
      * @param requestBody request body of get_account API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getAccount(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -229,7 +229,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a push_transactions call to the blockchain and process the response.
      * @param requestBody request body of push_transactions API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String pushTransactions(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -246,7 +246,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_block_header_state call to the blockchain and process the response.
      * @param requestBody request body of get_block_header_state API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getBlockHeaderState(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -263,7 +263,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_abi call to the blockchain and process the response.
      * @param requestBody request body of get_abi API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getAbi(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -280,7 +280,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_currency_balance call to the blockchain and process the response.
      * @param requestBody request body of get_currency_balance API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getCurrencyBalance(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -297,7 +297,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_currency_stats call to the blockchain and process the response.
      * @param requestBody request body of get_currency_stats API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getCurrencyStats(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -314,7 +314,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_producers call to the blockchain and process the response.
      * @param requestBody request body of get_producers API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getProducers(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -331,7 +331,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_raw_code_and_abi call to the blockchain and process the response.
      * @param requestBody request body of get_raw_code_and_abi API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getRawCodeAndAbi(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -348,7 +348,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_table_by_scope call to the blockchain and process the response.
      * @param requestBody request body of get_table_by_scope API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getTableByScope(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -365,7 +365,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_table_rows call to the blockchain and process the response.
      * @param requestBody request body of get_table_rows API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getTableRows(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -382,7 +382,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_code call to the blockchain and process the response.
      * @param requestBody request body of get_code API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getCode(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -399,7 +399,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_actions call to the blockchain and process the response.
      * @param requestBody request body of get_actions API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getActions(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -433,7 +433,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_key_accounts call to the blockchain and process the response.
      * @param requestBody request body of get_key_accounts API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getKeyAccounts(RequestBody requestBody) throws RpcProviderError {
         try {
@@ -450,7 +450,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_controlled_accounts call to the blockchain and process the response.
      * @param requestBody request body of get_controlled_accounts API
      * @return - String content of ResponseBody on successful return.
-     * @throws GetBlockRpcError - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getControlledAccounts(RequestBody requestBody) throws RpcProviderError {
         try {
