@@ -416,7 +416,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * Issue a get_transaction call to the blockchain and process the response.
      * @param requestBody request body of get_transaction API
      * @return - String content of ResponseBody on successful return.
-     * @throws String - Thrown if any errors occur calling or processing the request.
+     * @throws RpcProviderError - Thrown if any errors occur calling or processing the request.
      */
     public @NotNull String getTransaction(RequestBody requestBody) throws RpcProviderError {
         try {
