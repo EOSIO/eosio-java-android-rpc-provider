@@ -1,9 +1,11 @@
 package one.block.testeosiojavarpcprovider;
 
-import android.content.Context;
 import android.os.AsyncTask;
-import androidx.test.InstrumentationRegistry;
-import androidx.test.runner.AndroidJUnit4;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -13,12 +15,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import okhttp3.HttpUrl;
+
+import androidx.test.runner.AndroidJUnit4;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.SocketPolicy;
 import one.block.eosiojava.error.rpcProvider.GetBlockRpcError;
-import one.block.eosiojava.models.EOSIOName;
 import one.block.eosiojava.models.rpcProvider.Action;
 import one.block.eosiojava.models.rpcProvider.Authorization;
 import one.block.eosiojava.models.rpcProvider.Transaction;
@@ -33,17 +37,15 @@ import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
 import one.block.eosiojava.models.rpcProvider.response.RpcError;
-import one.block.eosiojava.session.TransactionProcessor;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.implementations.EosioJavaRpcProviderImpl;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.fail;
-import static org.junit.Assert.*;
+import static one.block.testeosiojavarpcprovider.RpcTestContants.*;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -355,6 +357,456 @@ public class EosioRpcProviderInstrumentedTest {
 
     }
 
+    @Test
+    public void testGetAccountRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_ACCOUNT_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+            String testAccount = "test_account";
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), "{\"name\":\""+testAccount+"\"}");
+            String response = rpcProvider.getAccount(requestBody);
+            assertNotNull(response);
+
+            JSONObject jsonObject = new JSONObject(response);
+            assertEquals(testAccount, jsonObject.getString("account_name"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getAccount(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testPushTransactionsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(PUSH_TRANSACTIONS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), PUSH_TRANSACTIONS_REQUEST);
+            String response = rpcProvider.pushTransactions(requestBody);
+            assertNotNull(response);
+            JSONArray jsonArray = new JSONArray(response);
+            assertEquals(2, jsonArray.length());
+            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", jsonArray.getJSONObject(0).getString("transaction_id"));
+            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", jsonArray.getJSONObject(1).getString("transaction_id"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling pushTransactions(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetBlockHeaderStateRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_BLOCK_HEADER_STATE_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_BLOCK_HEADER_STATE_REQUEST);
+            String response = rpcProvider.getBlockHeaderState(requestBody);
+            assertNotNull(response);
+            JSONObject jsonObject = new JSONObject(response);
+            assertEquals("020c00e41e66ca6a0fa489c9b2df391fd06089426a3daed5e4859cebc1d41b73", jsonObject.getString("id"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getBlockHeaderState(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetAbiRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_ABI_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_ABI_REQUEST);
+            String response = rpcProvider.getAbi(requestBody);
+            assertNotNull(response);
+            JSONObject jsonObject = new JSONObject(response);
+            assertEquals("eosio.token", jsonObject.getString("account_name"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getAbi(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetCurrencyBalanceRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_CURRENT_BALANCE_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CURRENT_BALANCE_REQUEST);
+            String response = rpcProvider.getCurrencyBalance(requestBody);
+            assertNotNull(response);
+            JSONArray jsonArray = new JSONArray(response);
+            assertEquals("1.0000 EOS", jsonArray.getString(0));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getCurrencyBalance(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetCurrencyStatsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_CURRENT_STATS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CURRENT_STATS_REQUEST);
+            String response = rpcProvider.getCurrencyStats(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals("100000000.0000 EOS", json.getJSONObject("EOS").getString("supply"));
+            assertEquals("10000000000.0000 EOS", json.getJSONObject("EOS").getString("max_supply"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getCurrencyStats(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetProducersRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_PRODUCER_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_PRODUCER_REQUEST);
+            String response = rpcProvider.getProducers(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(2, json.getJSONArray("rows").length());
+            assertEquals("blkproducer2", json.getJSONArray("rows").getJSONObject(0).getString("owner"));
+            assertEquals("blkproducer3", json.getJSONArray("rows").getJSONObject(1).getString("owner"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getProducers(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetRawCodeAndAbiRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_RAW_CODE_AND_ABI_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_RAW_CODE_AND_ABI_REQUEST);
+            String response = rpcProvider.getRawCodeAndAbi(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals("eosio.token", json.getString("account_name"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getRawCodeAndAbi(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetTableByScopeRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_TABLE_BY_SCOPE_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TABLE_BY_SCOPE_REQUEST);
+            String response = rpcProvider.getTableByScope(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(10, json.getJSONArray("rows").length());
+            assertEquals("eosio.token", json.getJSONArray("rows").getJSONObject(0).getString("code"));
+            assertEquals("test_account_1", json.getJSONArray("rows").getJSONObject(0).getString("scope"));
+            assertEquals("test_account_2", json.getJSONArray("rows").getJSONObject(1).getString("scope"));
+            assertEquals("test_account_7", json.getJSONArray("rows").getJSONObject(2).getString("scope"));
+            assertEquals("test_account_3", json.getJSONArray("rows").getJSONObject(3).getString("scope"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getTableByScope(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetTableRowsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_TABLE_ROWS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TABLE_ROWS_REQUEST);
+            String response = rpcProvider.getTableRows(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(1, json.getJSONArray("rows").length());
+            assertEquals("1000.0000 EOS", json.getJSONArray("rows").getJSONObject(0).getString("balance"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getTableRows(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetCodeRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_CODE_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CODE_REQUEST);
+            String response = rpcProvider.getCode(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(500, json.getInt("code"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getCode(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetActionsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_ACTIONS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_ACTIONS_REQUEST);
+            String response = rpcProvider.getActions(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(34394836, json.getInt("last_irreversible_block"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getActions(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetTransactionRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_TRANSACTION_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TRANSACTION_REQUEST);
+            String response = rpcProvider.getTransaction(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals("transaction id", json.getString("id"));
+            assertEquals("49420058", json.getString("block_num"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getTransaction(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetKeyAccountsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_KEY_ACCOUNTS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_KEY_ACCOUNTS_REQUEST);
+            String response = rpcProvider.getKeyAccounts(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(1, json.getJSONArray("account_names").length());
+            assertEquals("test_account", json.getJSONArray("account_names").getString(0));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getKeyAccounts(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
+    @Test
+    public void testGetControlledAccountsRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_CONTROLLED_ACCOUNTS_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CONTROLLED_ACCOUNTS_REQUEST);
+            String response = rpcProvider.getControlledAccounts(requestBody);
+            assertNotNull(response);
+            JSONObject json = new JSONObject(response);
+            assertEquals(0, json.getJSONArray("controlled_accounts").length());
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getControlledAccounts(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
+
     private String getStackTraceString(Exception ex) {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -395,267 +847,5 @@ public class EosioRpcProviderInstrumentedTest {
         );
 
         return transaction;
-
     }
-
-    private static final String GET_INFO_RESPONSE = "{\n"
-            + "    \"server_version\": \"0f6695cb\",\n"
-            + "    \"chain_id\": \"687fa513e18843ad3e820744f4ffcf93b1354036d80737db8dc444fe4b15ad17\",\n"
-            + "    \"head_block_num\": 20583056,\n"
-            + "    \"last_irreversible_block_num\": 20583039,\n"
-            + "    \"last_irreversible_block_id\": \"013a127fab9a79403a20b55914cdc7e1ac136618387325ad3c1914d27528a1f1\",\n"
-            + "    \"head_block_id\": \"013a129048f4486ce8a5ac8380870a8ce1bcbd4ff45b40fd0792503dc44c427d\",\n"
-            + "    \"head_block_time\": \"2019-01-25T16:39:38.000\",\n"
-            + "    \"head_block_producer\": \"blkproducer1\",\n"
-            + "    \"virtual_block_cpu_limit\": 200000000,\n"
-            + "    \"virtual_block_net_limit\": 1048576000,\n"
-            + "    \"block_cpu_limit\": 199900,\n"
-            + "    \"block_net_limit\": 1048576,\n"
-            + "    \"server_version_string\": \"v1.3.0\"\n"
-            + "}";
-
-    private static final String GET_BLOCK_RESPONSE = "{\n"
-            + "    \"timestamp\": \"2019-02-21T18:31:40.000\",\n"
-            + "    \"producer\": \"blkproducer2\",\n"
-            + "    \"confirmed\": 0,\n"
-            + "    \"previous\": \"01816fffa4548475add3c45d0e0620f59468a6817426137b37851c23ccafa9cc\",\n"
-            + "    \"transaction_mroot\": \"0000000000000000000000000000000000000000000000000000000000000000\",\n"
-            + "    \"action_mroot\": \"de5493939e3abdca80deeab2fc9389cc43dc1982708653cfe6b225eb788d6659\",\n"
-            + "    \"schedule_version\": 3,\n"
-            + "    \"new_producers\": null,\n"
-            + "    \"header_extensions\": [],\n"
-            + "    \"producer_signature\": \"SIG_K1_KZ3ptku7orAgcyMzd9FKW4jPC9PvjW9BGadFoyxdJFWM44VZdjW28DJgDe6wkNHAxnpqCWSzaBHB1AfbXBUn3HDzetemoA\",\n"
-            + "    \"transactions\": [],\n"
-            + "    \"block_extensions\": [],\n"
-            + "    \"id\": \"0181700002e623f2bf291b86a10a5cec4caab4954d4231f31f050f4f86f26116\",\n"
-            + "    \"block_num\": 25260032,\n"
-            + "    \"ref_block_prefix\": 2249927103\n"
-            + "}";
-
-    private static final String GET_RAW_EOSIO_TOKEN_ABI_RESPONSE = "{\n"
-            + "    \"account_name\": \"eosio.token\",\n"
-            + "    \"code_hash\": \"3e0cf4172ab025f9fff5f1db11ee8a34d44779492e1d668ae1dc2d129e865348\",\n"
-            + "    \"abi_hash\": \"43864d5af0fe294d44d19c612036cbe8c098414c4a12a5a7bb0bfe7db1556248\",\n"
-            + "    \"abi\": \"DmVvc2lvOjphYmkvMS4wAQxhY2NvdW50X25hbWUEbmFtZQUIdHJhbnNmZXIABARmcm9tDGFjY291bnRfbmFtZQJ0bwxhY2NvdW50X25hbWUIcXVhbnRpdHkFYXNzZXQEbWVtbwZzdHJpbmcGY3JlYXRlAAIGaXNzdWVyDGFjY291bnRfbmFtZQ5tYXhpbXVtX3N1cHBseQVhc3NldAVpc3N1ZQADAnRvDGFjY291bnRfbmFtZQhxdWFudGl0eQVhc3NldARtZW1vBnN0cmluZwdhY2NvdW50AAEHYmFsYW5jZQVhc3NldA5jdXJyZW5jeV9zdGF0cwADBnN1cHBseQVhc3NldAptYXhfc3VwcGx5BWFzc2V0Bmlzc3VlcgxhY2NvdW50X25hbWUDAAAAVy08zc0IdHJhbnNmZXK8By0tLQp0aXRsZTogVG9rZW4gVHJhbnNmZXIKc3VtbWFyeTogVHJhbnNmZXIgdG9rZW5zIGZyb20gb25lIGFjY291bnQgdG8gYW5vdGhlci4KaWNvbjogaHR0cHM6Ly9jZG4udGVzdG5ldC5kZXYuYjFvcHMubmV0L3Rva2VuLXRyYW5zZmVyLnBuZyNjZTUxZWY5ZjllZWNhMzQzNGU4NTUwN2UwZWQ0OWU3NmZmZjEyNjU0MjJiZGVkMDI1NWYzMTk2ZWE1OWM4YjBjCi0tLQoKIyMgVHJhbnNmZXIgVGVybXMgJiBDb25kaXRpb25zCgpJLCB7e2Zyb219fSwgY2VydGlmeSB0aGUgZm9sbG93aW5nIHRvIGJlIHRydWUgdG8gdGhlIGJlc3Qgb2YgbXkga25vd2xlZGdlOgoKMS4gSSBjZXJ0aWZ5IHRoYXQge3txdWFudGl0eX19IGlzIG5vdCB0aGUgcHJvY2VlZHMgb2YgZnJhdWR1bGVudCBvciB2aW9sZW50IGFjdGl2aXRpZXMuCjIuIEkgY2VydGlmeSB0aGF0LCB0byB0aGUgYmVzdCBvZiBteSBrbm93bGVkZ2UsIHt7dG99fSBpcyBub3Qgc3VwcG9ydGluZyBpbml0aWF0aW9uIG9mIHZpb2xlbmNlIGFnYWluc3Qgb3RoZXJzLgozLiBJIGhhdmUgZGlzY2xvc2VkIGFueSBjb250cmFjdHVhbCB0ZXJtcyAmIGNvbmRpdGlvbnMgd2l0aCByZXNwZWN0IHRvIHt7cXVhbnRpdHl9fSB0byB7e3RvfX0uCgpJIHVuZGVyc3RhbmQgdGhhdCBmdW5kcyB0cmFuc2ZlcnMgYXJlIG5vdCByZXZlcnNpYmxlIGFmdGVyIHRoZSB7eyR0cmFuc2FjdGlvbi5kZWxheV9zZWN9fSBzZWNvbmRzIG9yIG90aGVyIGRlbGF5IGFzIGNvbmZpZ3VyZWQgYnkge3tmcm9tfX0ncyBwZXJtaXNzaW9ucy4KCklmIHRoaXMgYWN0aW9uIGZhaWxzIHRvIGJlIGlycmV2ZXJzaWJseSBjb25maXJtZWQgYWZ0ZXIgcmVjZWl2aW5nIGdvb2RzIG9yIHNlcnZpY2VzIGZyb20gJ3t7dG99fScsIEkgYWdyZWUgdG8gZWl0aGVyIHJldHVybiB0aGUgZ29vZHMgb3Igc2VydmljZXMgb3IgcmVzZW5kIHt7cXVhbnRpdHl9fSBpbiBhIHRpbWVseSBtYW5uZXIuAAAAAAClMXYFaXNzdWUAAAAAAKhs1EUGY3JlYXRlAAIAAAA4T00RMgNpNjQBCGN1cnJlbmN5AQZ1aW50NjQHYWNjb3VudAAAAAAAkE3GA2k2NAEIY3VycmVuY3kBBnVpbnQ2NA5jdXJyZW5jeV9zdGF0cwAAAAA==\"\n"
-            + "}";
-
-
-    private static final String GET_REQUIRED_KEYS_RESPONSE = "{\n"
-            + "    \"required_keys\": [\n"
-            + "        \"EOS5j67P1W2RyBXAL8sNzYcDLox3yLpxyrxgkYy1xsXzVCvzbYpba\"\n"
-            + "    ]\n"
-            + "}";
-
-    private static final String PUSH_TRANSACTION_RESPONSE = "{\n"
-            + "    \"transaction_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "    \"processed\": {\n"
-            + "        \"id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "        \"block_num\": 21098575,\n"
-            + "        \"block_time\": \"2019-01-28T16:15:37.500\",\n"
-            + "        \"producer_block_id\": null,\n"
-            + "        \"receipt\": {\n"
-            + "            \"status\": \"executed\",\n"
-            + "            \"cpu_usage_us\": 3837,\n"
-            + "            \"net_usage_words\": 36\n"
-            + "        },\n"
-            + "        \"elapsed\": 3837,\n"
-            + "        \"net_usage\": 288,\n"
-            + "        \"scheduled\": false,\n"
-            + "        \"action_traces\": [\n"
-            + "            {\n"
-            + "                \"receipt\": {\n"
-            + "                    \"receiver\": \"eosio.assert\",\n"
-            + "                    \"act_digest\": \"a4caeedd5e5824dd916c1aaabc84f0a114ddbda83728c8c23ba859d4a8a93721\",\n"
-            + "                    \"global_sequence\": 21103875,\n"
-            + "                    \"recv_sequence\": 332,\n"
-            + "                    \"auth_sequence\": [],\n"
-            + "                    \"code_sequence\": 1,\n"
-            + "                    \"abi_sequence\": 1\n"
-            + "                },\n"
-            + "                \"act\": {\n"
-            + "                    \"account\": \"eosio.assert\",\n"
-            + "                    \"name\": \"require\",\n"
-            + "                    \"authorization\": [],\n"
-            + "                    \"data\": {\n"
-            + "                        \"chain_params_hash\": \"cbdd956f52acd910c3c958136d72f8560d1846bc7cf3157f5fbfb72d3001de45\",\n"
-            + "                        \"manifest_id\": \"97f4a1fdbecda6d59c96a43009fc5e5d7b8f639b1269c77cec718460dcc19cb3\",\n"
-            + "                        \"actions\": [\n"
-            + "                            {\n"
-            + "                                \"contract\": \"eosio.token\",\n"
-            + "                                \"action\": \"transfer\"\n"
-            + "                            }\n"
-            + "                        ],\n"
-            + "                        \"abi_hashes\": [\n"
-            + "                            \"43864d5af0fe294d44d19c612036cbe8c098414c4a12a5a7bb0bfe7db1556248\"\n"
-            + "                        ]\n"
-            + "                    },\n"
-            + "                    \"hex_data\": \"cbdd956f52acd910c3c958136d72f8560d1846bc7cf3157f5fbfb72d3001de4597f4a1fdbecda6d59c96a43009fc5e5d7b8f639b1269c77cec718460dcc19cb30100a6823403ea3055000000572d3ccdcd0143864d5af0fe294d44d19c612036cbe8c098414c4a12a5a7bb0bfe7db1556248\"\n"
-            + "                },\n"
-            + "                \"context_free\": false,\n"
-            + "                \"elapsed\": 1264,\n"
-            + "                \"cpu_usage\": 0,\n"
-            + "                \"console\": \"\",\n"
-            + "                \"total_cpu_usage\": 0,\n"
-            + "                \"trx_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "                \"block_num\": 21098575,\n"
-            + "                \"block_time\": \"2019-01-28T16:15:37.500\",\n"
-            + "                \"producer_block_id\": null,\n"
-            + "                \"account_ram_deltas\": [],\n"
-            + "                \"inline_traces\": []\n"
-            + "            },\n"
-            + "            {\n"
-            + "                \"receipt\": {\n"
-            + "                    \"receiver\": \"eosio.token\",\n"
-            + "                    \"act_digest\": \"9eab239d66d13c34b9cc35a6f79fb2f6d61a2d9df9a484075c82e65d73a0cbc8\",\n"
-            + "                    \"global_sequence\": 21103876,\n"
-            + "                    \"recv_sequence\": 1366,\n"
-            + "                    \"auth_sequence\": [\n"
-            + "                        [\n"
-            + "                            \"cryptkeeper\",\n"
-            + "                            875\n"
-            + "                        ]\n"
-            + "                    ],\n"
-            + "                    \"code_sequence\": 1,\n"
-            + "                    \"abi_sequence\": 4\n"
-            + "                },\n"
-            + "                \"act\": {\n"
-            + "                    \"account\": \"eosio.token\",\n"
-            + "                    \"name\": \"transfer\",\n"
-            + "                    \"authorization\": [\n"
-            + "                        {\n"
-            + "                            \"actor\": \"cryptkeeper\",\n"
-            + "                            \"permission\": \"active\"\n"
-            + "                        }\n"
-            + "                    ],\n"
-            + "                    \"data\": {\n"
-            + "                        \"from\": \"cryptkeeper\",\n"
-            + "                        \"to\": \"brandon\",\n"
-            + "                        \"quantity\": \"42.0000 EOS\",\n"
-            + "                        \"memo\": \"the grasshopper lies heavy\"\n"
-            + "                    },\n"
-            + "                    \"hex_data\": \"00aeaa4ac15cfd4500000060d234cd3da06806000000000004454f53000000001a746865206772617373686f70706572206c696573206865617679\"\n"
-            + "                },\n"
-            + "                \"context_free\": false,\n"
-            + "                \"elapsed\": 2197,\n"
-            + "                \"cpu_usage\": 0,\n"
-            + "                \"console\": \"\",\n"
-            + "                \"total_cpu_usage\": 0,\n"
-            + "                \"trx_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "                \"block_num\": 21098575,\n"
-            + "                \"block_time\": \"2019-01-28T16:15:37.500\",\n"
-            + "                \"producer_block_id\": null,\n"
-            + "                \"account_ram_deltas\": [],\n"
-            + "                \"inline_traces\": [\n"
-            + "                    {\n"
-            + "                        \"receipt\": {\n"
-            + "                            \"receiver\": \"cryptkeeper\",\n"
-            + "                            \"act_digest\": \"9eab239d66d13c34b9cc35a6f79fb2f6d61a2d9df9a484075c82e65d73a0cbc8\",\n"
-            + "                            \"global_sequence\": 21103877,\n"
-            + "                            \"recv_sequence\": 496,\n"
-            + "                            \"auth_sequence\": [\n"
-            + "                                [\n"
-            + "                                    \"cryptkeeper\",\n"
-            + "                                    876\n"
-            + "                                ]\n"
-            + "                            ],\n"
-            + "                            \"code_sequence\": 1,\n"
-            + "                            \"abi_sequence\": 4\n"
-            + "                        },\n"
-            + "                        \"act\": {\n"
-            + "                            \"account\": \"eosio.token\",\n"
-            + "                            \"name\": \"transfer\",\n"
-            + "                            \"authorization\": [\n"
-            + "                                {\n"
-            + "                                    \"actor\": \"cryptkeeper\",\n"
-            + "                                    \"permission\": \"active\"\n"
-            + "                                }\n"
-            + "                            ],\n"
-            + "                            \"data\": {\n"
-            + "                                \"from\": \"cryptkeeper\",\n"
-            + "                                \"to\": \"brandon\",\n"
-            + "                                \"quantity\": \"42.0000 EOS\",\n"
-            + "                                \"memo\": \"the grasshopper lies heavy\"\n"
-            + "                            },\n"
-            + "                            \"hex_data\": \"00aeaa4ac15cfd4500000060d234cd3da06806000000000004454f53000000001a746865206772617373686f70706572206c696573206865617679\"\n"
-            + "                        },\n"
-            + "                        \"context_free\": false,\n"
-            + "                        \"elapsed\": 6,\n"
-            + "                        \"cpu_usage\": 0,\n"
-            + "                        \"console\": \"\",\n"
-            + "                        \"total_cpu_usage\": 0,\n"
-            + "                        \"trx_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "                        \"block_num\": 21098575,\n"
-            + "                        \"block_time\": \"2019-01-28T16:15:37.500\",\n"
-            + "                        \"producer_block_id\": null,\n"
-            + "                        \"account_ram_deltas\": [],\n"
-            + "                        \"inline_traces\": []\n"
-            + "                    },\n"
-            + "                    {\n"
-            + "                        \"receipt\": {\n"
-            + "                            \"receiver\": \"brandon\",\n"
-            + "                            \"act_digest\": \"9eab239d66d13c34b9cc35a6f79fb2f6d61a2d9df9a484075c82e65d73a0cbc8\",\n"
-            + "                            \"global_sequence\": 21103878,\n"
-            + "                            \"recv_sequence\": 582,\n"
-            + "                            \"auth_sequence\": [\n"
-            + "                                [\n"
-            + "                                    \"cryptkeeper\",\n"
-            + "                                    877\n"
-            + "                                ]\n"
-            + "                            ],\n"
-            + "                            \"code_sequence\": 1,\n"
-            + "                            \"abi_sequence\": 4\n"
-            + "                        },\n"
-            + "                        \"act\": {\n"
-            + "                            \"account\": \"eosio.token\",\n"
-            + "                            \"name\": \"transfer\",\n"
-            + "                            \"authorization\": [\n"
-            + "                                {\n"
-            + "                                    \"actor\": \"cryptkeeper\",\n"
-            + "                                    \"permission\": \"active\"\n"
-            + "                                }\n"
-            + "                            ],\n"
-            + "                            \"data\": {\n"
-            + "                                \"from\": \"cryptkeeper\",\n"
-            + "                                \"to\": \"brandon\",\n"
-            + "                                \"quantity\": \"42.0000 EOS\",\n"
-            + "                                \"memo\": \"the grasshopper lies heavy\"\n"
-            + "                            },\n"
-            + "                            \"hex_data\": \"00aeaa4ac15cfd4500000060d234cd3da06806000000000004454f53000000001a746865206772617373686f70706572206c696573206865617679\"\n"
-            + "                        },\n"
-            + "                        \"context_free\": false,\n"
-            + "                        \"elapsed\": 5,\n"
-            + "                        \"cpu_usage\": 0,\n"
-            + "                        \"console\": \"\",\n"
-            + "                        \"total_cpu_usage\": 0,\n"
-            + "                        \"trx_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "                        \"block_num\": 21098575,\n"
-            + "                        \"block_time\": \"2019-01-28T16:15:37.500\",\n"
-            + "                        \"producer_block_id\": null,\n"
-            + "                        \"account_ram_deltas\": [],\n"
-            + "                        \"inline_traces\": []\n"
-            + "                    }\n"
-            + "                ]\n"
-            + "            }\n"
-            + "        ],\n"
-            + "        \"except\": null\n"
-            + "    }\n"
-            + "}";
-
-    private static final String PUSH_TRANSACTION_ERROR_RESPONSE = "{\n"
-            + "    \"code\": 500,\n"
-            + "    \"message\": \"Internal Service Error\",\n"
-            + "    \"error\": {\n"
-            + "        \"code\": 3040005,\n"
-            + "        \"name\": \"expired_tx_exception\",\n"
-            + "        \"what\": \"Expired Transaction\",\n"
-            + "        \"details\": [\n"
-            + "            {\n"
-            + "                \"message\": \"expired transaction ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
-            + "                \"file\": \"producer_plugin.cpp\",\n"
-            + "                \"line_number\": 378,\n"
-            + "                \"method\": \"on_incoming_transaction_async\"\n"
-            + "            }\n"
-            + "        ]\n"
-            + "    }\n"
-            + "}";
 }
