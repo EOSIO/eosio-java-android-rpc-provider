@@ -24,70 +24,211 @@ import retrofit2.http.POST;
 public interface IEosioJavaRpcProviderApi {
 
     //region Model supported APIs
+
+    /**
+     * Retrofit POST call to "chain/get_info" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getInfo()} to get latest information about the pointing chain.
+     *
+     * @return Executable {@link Call} to return {@link GetInfoResponse} has latest information about a chain.
+     */
     @POST("v1/chain/get_info")
-    public Call<GetInfoResponse> getInfo();
+    Call<GetInfoResponse> getInfo();
 
+    /**
+     * Retrofit POST call to "chain/get_block" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getBlock(GetBlockRequest)} to get info/status of a specific block in the request.
+     *
+     * @param getBlockRequest Info of a specific block.
+     * @return Executable {@link Call} to return {@link GetBlockResponse} has the info/status of a specific block in the request.
+     */
     @POST("v1/chain/get_block")
-    public Call<GetBlockResponse> getBlock(@Body GetBlockRequest getBlockRequest);
+    Call<GetBlockResponse> getBlock(@Body GetBlockRequest getBlockRequest);
 
+    /**
+     * Retrofit POST call to "chain/get_raw_abi" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getRawAbi(GetRawAbiRequest)} to get serialized ABI of a smart contract in the request.
+     *
+     * @param getRawAbiRequest Info of a specific smart contract.
+     * @return Executable {@link Call} to return {@link GetRawAbiResponse} has the serialized ABI of a smart contract in the request.
+     */
     @POST("v1/chain/get_raw_abi")
-    public Call<GetRawAbiResponse> getRawAbi(@Body GetRawAbiRequest getRawAbiRequest);
+    Call<GetRawAbiResponse> getRawAbi(@Body GetRawAbiRequest getRawAbiRequest);
 
+    /**
+     * Retrofit POST call to "chain/get_required_keys" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getRequiredKeys(GetRequiredKeysRequest)} to get required keys to sign a transaction
+     *
+     * @param getRequiredKeysRequest Info to get required keys
+     * @return Executable {@link Call} to return {@link GetRequiredKeysResponse} has the required keys to sign a transaction
+     */
     @POST("v1/chain/get_required_keys")
-    public Call<GetRequiredKeysResponse> getRequiredKeys(@Body GetRequiredKeysRequest getRequiredKeysRequest);
+    Call<GetRequiredKeysResponse> getRequiredKeys(@Body GetRequiredKeysRequest getRequiredKeysRequest);
 
+    /**
+     * Retrofit POST call to "chain/push_transaction" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#pushTransaction(PushTransactionRequest)} to Push transaction RPC call to broadcast a transaction to backend
+     *
+     * @param pushTransactionRequest the transaction to push with signatures.
+     * @return Executable {@link Call} to return {@link PushTransactionResponse} has the push transaction response
+     */
     @POST("v1/chain/push_transaction")
-    public Call<PushTransactionResponse> pushTransaction(@Body PushTransactionRequest pushTransactionRequest);
+    Call<PushTransactionResponse> pushTransaction(@Body PushTransactionRequest pushTransactionRequest);
     //endregion
+
 
     //region Extra APIs
     // Chain APIs
+    /**
+     * Retrofit POST call to "chain/get_account" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getAccount(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_account' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_account' API
+     */
     @POST("v1/chain/get_account")
-    public Call<ResponseBody> getAccount(@Body RequestBody requestBody);
+    Call<ResponseBody> getAccount(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/push_transactions" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#pushTransactions(RequestBody)}
+     *
+     * @param requestBody the request body to call 'push_transactions' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'push_transactions' API
+     */
     @POST("v1/chain/push_transactions")
-    public Call<ResponseBody> pushTransactions(@Body RequestBody requestBody);
+    Call<ResponseBody> pushTransactions(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_block_header_state" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getBlockHeaderState(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_block_header_state' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_block_header_state' API
+     */
     @POST("v1/chain/get_block_header_state")
-    public Call<ResponseBody> getBlockHeaderState(@Body RequestBody requestBody);
+    Call<ResponseBody> getBlockHeaderState(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_abi" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getAbi(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_abi' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_abi' API
+     */
     @POST("v1/chain/get_abi")
-    public Call<ResponseBody> getAbi(@Body RequestBody requestBody);
+    Call<ResponseBody> getAbi(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_currency_balance" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getCurrencyBalance(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_currency_balance' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_currency_balance' API
+     */
     @POST("v1/chain/get_currency_balance")
-    public Call<ResponseBody> getCurrencyBalance(@Body RequestBody requestBody);
+    Call<ResponseBody> getCurrencyBalance(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_currency_stats" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getCurrencyStats(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_currency_stats' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_currency_stats' API
+     */
     @POST("v1/chain/get_currency_stats")
-    public Call<ResponseBody> getCurrencyStats(@Body RequestBody requestBody);
+    Call<ResponseBody> getCurrencyStats(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_producers" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getProducers(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_producers' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_producers' API
+     */
     @POST("v1/chain/get_producers")
-    public Call<ResponseBody> getProducers(@Body RequestBody requestBody);
+    Call<ResponseBody> getProducers(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_raw_code_and_abi" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getRawCodeAndAbi(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_raw_code_and_abi' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_raw_code_and_abi' API
+     */
     @POST("v1/chain/get_raw_code_and_abi")
-    public Call<ResponseBody> getRawCodeAndAbi(@Body RequestBody requestBody);
+    Call<ResponseBody> getRawCodeAndAbi(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_table_by_scope" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getTableByScope(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_table_by_scope' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_table_by_scope' API
+     */
     @POST("v1/chain/get_table_by_scope")
-    public Call<ResponseBody> getTableByScope(@Body RequestBody requestBody);
+    Call<ResponseBody> getTableByScope(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_table_rows" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getTableRows(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_table_rows' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_table_rows' API
+     */
     @POST("v1/chain/get_table_rows")
-    public Call<ResponseBody> getTableRows(@Body RequestBody requestBody);
+    Call<ResponseBody> getTableRows(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_code" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getCode(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_code' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_code' API
+     */
     @POST("v1/chain/get_code")
-    public Call<ResponseBody> getCode(@Body RequestBody requestBody);
+    Call<ResponseBody> getCode(@Body RequestBody requestBody);
 
     //History APIs
 
+    /**
+     * Retrofit POST call to "chain/get_actions" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getActions(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_actions' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_actions' API
+     */
     @POST("v1/history/get_actions")
-    public Call<ResponseBody> getActions(@Body RequestBody requestBody);
+    Call<ResponseBody> getActions(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_transaction" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getTransaction(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_transaction' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_transaction' API
+     */
     @POST("v1/history/get_transaction")
-    public Call<ResponseBody> getTransaction(@Body RequestBody requestBody);
+    Call<ResponseBody> getTransaction(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_key_accounts" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getKeyAccounts(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_key_accounts' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_key_accounts' API
+     */
     @POST("v1/history/get_key_accounts")
-    public Call<ResponseBody> getKeyAccounts(@Body RequestBody requestBody);
+    Call<ResponseBody> getKeyAccounts(@Body RequestBody requestBody);
 
+    /**
+     * Retrofit POST call to "chain/get_controlled_accounts" to an EOSIO chain backend.
+     * This method get called from {@link EosioJavaRpcProviderImpl#getControlledAccounts(RequestBody)}
+     *
+     * @param requestBody the request body to call 'get_controlled_accounts' API
+     * @return Executable {@link Call} to return {@link ResponseBody} of 'get_controlled_accounts' API
+     */
     @POST("v1/history/get_controlled_accounts")
-    public Call<ResponseBody> getControlledAccounts(@Body RequestBody requestBody);
+    Call<ResponseBody> getControlledAccounts(@Body RequestBody requestBody);
 
     //endregion
 }
