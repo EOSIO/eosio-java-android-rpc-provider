@@ -9,7 +9,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
-        versionName lib_version
+        versionName '0.1-alpha'
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -30,7 +30,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'one.block:eosiojava:0.2-alpha'
+    implementation 'one.block:eosiojava:1.0.0'
 
     implementation 'org.jetbrains:annotations:17.0.0'
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -45,9 +45,9 @@ dependencies {
 }
 
 
-def libraryGroupId = lib_group_name
-def libraryArtifactId = lib_id
-def libraryVersion = lib_version
+def libraryGroupId = 'one.block'
+def libraryArtifactId = 'eosiojavarpcprovider'
+def libraryVersion = '0.1-alpha'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
@@ -72,7 +72,7 @@ task androidSourcesJar(type: Jar) {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        aar(MavenPublication) {
             groupId libraryGroupId
             version libraryVersion
             artifactId libraryArtifactId
@@ -80,24 +80,6 @@ publishing {
             artifact bundleReleaseAar
             artifact androidJavadocsJar
             artifact androidSourcesJar
-            pom {
-                name = lib_name
-                description = lib_description
-                url = lib_url
-                licenses {
-                    license {
-                        name = lib_license
-                        url = lib_license_url
-                    }
-                }
-                developers {
-                    developer {
-                        id = lib_dev_id
-                        name = lib_dev_name
-                        email = lib_dev_email
-                    }
-                }
-            }
 
             pom.withXml {
                 final dependenciesNode = asNode().appendNode('dependencies')
@@ -139,7 +121,7 @@ publishing {
 }
 
 artifactory {
-    contextUrl = artifactory_url
+    contextUrl = artifactory_contextURL
     publish {
         repository {
             repoKey = artifactory_repo
@@ -148,11 +130,16 @@ artifactory {
             password = artifactory_password
         }
         defaults {
-            publications('maven')
+            publications('aar')
             publishArtifacts = true
 
             properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
             publishPom = true
         }
     }
+}
+
+//Changes module cache control - Default is 24 hrs
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 1, 'minutes'
 }
