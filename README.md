@@ -1,7 +1,11 @@
-# EOSIO SDK for Java Android: RPC Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
-[![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE)
-![Lagnuage Java](https://img.shields.io/badge/Language-Java-yellow.svg)
+# EOSIO SDK for Java: Android RPC Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+[![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](/./LICENSE)
+![Language Java](https://img.shields.io/badge/Language-Java-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
+
+An Android [RPC provider](https://github.com/EOSIO/eosio-java/tree/master#rpc-provider-protocol) implementation for use within [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a plugin. RPC providers are responsible for all [RPC calls to nodeos](https://developers.eos.io/eosio-nodeos/reference), as well as general network handling. 
+
+_All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them._
 
 ## Contents
 
@@ -18,13 +22,13 @@
 * Gradle Plugin 3.3.0+
 * For Android, Android 6 (Marshmallow)+
 
-This project relies on platform functionality and libraries only present in Android 6+. Therefore, any project depending on RPC Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. Other rpc providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a rpc provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
+This project relies on platform functionality and libraries only present in Android 6+. Therefore, any project depending on Android RPC Provider with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) **must be an Android 6+ project**. Other RPC providers, however, can be created to support earlier Android versions or other platforms. If your project requires earlier Android version or alternate platform support, or if you'd like to create a RPC provider and have questions, please reach out to us by [logging an issue](/../../issues/new).
 
 ## Installation
 
-RPC Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
+Android RPC Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
-To use RPC Provider with EOSIO SDK for Java in your app, add the following modules to your build.gradle:
+To use Android RPC Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 **TODO** This needs to be updated when the distribution strategy is finalized.
 
@@ -33,7 +37,7 @@ implementation 'one.block:eosio-java:0.1-alpha'
 implementation 'one.block:eosio-java-android-rpc-provider:0.1-alpha'
 ```
 
-You must also add the following to the `android` section of your application's build.gradle:
+You must also add the following to the `android` section of your application's `build.gradle`:
 
 ```groovy
 // Needed to get bitcoin-j to produce a valid apk for android.
@@ -46,11 +50,11 @@ packagingOptions {
 
 Then refresh your gradle project.
 
-Now RPC Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/develop#basic-usage).
+Now Android RPC Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
 
 ## Direct Usage
 
-If you wish to use RPC Provider directly, its public methods can be called like this:
+If you wish to use Android RPC Provider directly, its public methods can be called like this:
 
 ```java
 // Synchronous call
