@@ -21,7 +21,6 @@ android {
         }
     }
 
-
     lintOptions {
         abortOnError false
     }
