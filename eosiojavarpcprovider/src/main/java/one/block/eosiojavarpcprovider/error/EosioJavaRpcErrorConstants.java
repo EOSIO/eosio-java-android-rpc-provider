@@ -19,117 +19,117 @@ public class EosioJavaRpcErrorConstants {
     // region EosioRpcProvderImpl errors
 
     /**
-     * Error message get thrown if input Base URL is empty.
+     * Error message gets thrown if input Base URL is empty.
      */
     public static final String RPC_PROVIDER_BASE_URL_EMPTY = "Base URL cannot be empty or null.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getInfo()} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getInfo()} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GETTING_CHAIN_INFO = "Error retrieving chain information.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getBlock(GetBlockRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getBlock(GetBlockRequest)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GETTING_BLOCK_INFO = "Error retrieving block information.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getRawAbi(GetRawAbiRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getRawAbi(GetRawAbiRequest)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GETTING_RAW_ABI = "Error retrieving raw ABI.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getRequiredKeys(GetRequiredKeysRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getRequiredKeys(GetRequiredKeysRequest)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GETTING_REQUIRED_KEYS = "Error retrieving required keys.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#pushTransaction(PushTransactionRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#pushTransaction(PushTransactionRequest)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_PUSHING_TRANSACTION = "Error pushing transaction.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#pushTransactions(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#pushTransactions(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_PUSHING_TRANSACTIONS = "Error pushing transactions.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getAccount(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getAccount(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_ACCOUNT = "Error get account.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getBlock(GetBlockRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getBlock(GetBlockRequest)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_BLOCK_HEADER_STATE = "Error get block header state.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getAbi(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getAbi(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_ABI = "Error get abi.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getCurrencyBalance(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getCurrencyBalance(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_CURRENT_BALANCE = "Error get current balance.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getCurrencyStats(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getCurrencyStats(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_CURRENT_STATS = "Error get current stats.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getProducers(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getProducers(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_PRODUCERS = "Error get producers.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getRawCodeAndAbi(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getRawCodeAndAbi(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_RAW_CODE_AND_ABI = "Error get raw code and abi.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getTableByScope(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getTableByScope(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_TABLE_BY_SCOPE = "Error get table by scope.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getTableRows(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getTableRows(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_TABLE_ROWS = "Error get table rows.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getCode(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getCode(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_CODE = "Error get code.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getActions(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getActions(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_ACTION = "Error get action.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getTransaction(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getTransaction(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_TRANSACTION = "Error get transaction.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getKeyAccounts(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getKeyAccounts(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_KEY_ACCOUNTS = "Error get key accounts.";
 
     /**
-     * Error message get thrown if {@link EosioJavaRpcProviderImpl#getControlledAccounts(RequestBody)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#getControlledAccounts(RequestBody)} returns error.
      */
     public static final String RPC_PROVIDER_ERROR_GET_CONTROLLED_ACCOUNTS = "Error get controlled accounts.";
 
     /**
-     * Error message get thrown if RPC call returns bad status code from server.
+     * Error message gets thrown if RPC call returns bad status code from server.
      */
     public static final String RPC_PROVIDER_BAD_STATUS_CODE_RETURNED = "Bad status code: %d (%s), returned from server. Additional error information: %s";
 
     /**
-     * Error message get thrown if RPC call returns empty response.
+     * Error message gets thrown if RPC call returns empty response.
      */
     public static final String RPC_PROVIDER_EMPTY_RESPONSE_RETURNED = "Empty response returned from the server.";
 
@@ -139,7 +139,7 @@ public class EosioJavaRpcErrorConstants {
     public static final String RPC_PROVIDER_NO_FURTHER_ERROR_INFO = "No further error information available.";
 
     /**
-     * Error message describe there is more info about the error inside {@link RPCResponseError} get returned.
+     * Error message is a reference to {@link RPCResponseError} for additional information.
      */
     public static final String RPC_PROVIDER_SEE_FURTHER_ERROR_INFO = "See further error information in RPCProviderError.";
 
