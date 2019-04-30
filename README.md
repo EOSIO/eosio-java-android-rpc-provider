@@ -14,6 +14,7 @@ _All product and company names are trademarks™ or registered® trademarks of t
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
+- [Android Example App](#android-example-app)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -95,6 +96,10 @@ AsyncTask<GetBlockRequest, Void, GetBlockResponse> asyncTask = new AsyncTask<Get
     }
 }.execute(request);
 ```
+
+## Android Example App
+
+If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
 
 ## Want to help?
 
