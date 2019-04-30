@@ -1,3 +1,4 @@
+![Java Logo](img/java-logo.png)
 # EOSIO SDK for Java: Android RPC Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](/./LICENSE)
 ![Language Java](https://img.shields.io/badge/Language-Java-yellow.svg)
@@ -29,8 +30,6 @@ This project relies on platform functionality and libraries only present in Andr
 Android RPC Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
 To use Android RPC Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
-
-**TODO** This needs to be updated when the distribution strategy is finalized.
 
 ```groovy
 implementation 'one.block:eosiojava:0.0.1'
