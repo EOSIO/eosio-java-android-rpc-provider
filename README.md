@@ -13,6 +13,7 @@ _All product and company names are trademarks™ or registered® trademarks of t
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
+- [What's next for the SDK](#whats-next-for-the-sdk)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -92,6 +93,12 @@ AsyncTask<GetBlockRequest, Void, GetBlockResponse> asyncTask = new AsyncTask<Get
     }
 }.execute(request);
 ```
+
+## What's next for the SDK
+
+We're always looking for ways to improve EOSIO SDK for Java: Android RPC Provider. Here are a few ideas around how we'd like to see the library progress. Check out our [#enhancement Issues](/../../issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for more.
+
+* Improve flexibility to show better network logs for debug mode even the library is consumed by release version from artifactory. 
 
 ## Want to help?
 
