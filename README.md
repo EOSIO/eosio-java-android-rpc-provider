@@ -1,9 +1,11 @@
+![Java Logo](img/java-logo.png)
 # EOSIO SDK for Java: Android RPC Provider ![EOSIO Alpha](https://img.shields.io/badge/EOSIO-Alpha-blue.svg)
+
 [![Software License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](/./LICENSE)
 ![Language Java](https://img.shields.io/badge/Language-Java-yellow.svg)
 ![](https://img.shields.io/badge/Deployment%20Target-Android%206%2B-blue.svg)
 
-An Android [RPC provider](https://github.com/EOSIO/eosio-java/tree/master#rpc-provider-protocol) implementation for use within [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a plugin. RPC providers are responsible for all [RPC calls to nodeos](https://developers.eos.io/eosio-nodeos/reference), as well as general network handling. 
+An Android [RPC provider](https://github.com/EOSIO/eosio-java/tree/master#rpc-provider-protocol) implementation for use within [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a plugin. RPC providers are responsible for all [RPC calls to nodeos](https://developers.eos.io/eosio-nodeos/reference), as well as general network handling.
 
 _All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them._
 
@@ -12,6 +14,7 @@ _All product and company names are trademarks™ or registered® trademarks of t
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
+- [Android Example App](#android-example-app)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -29,8 +32,6 @@ This project relies on platform functionality and libraries only present in Andr
 Android RPC Provider is intended to be used in conjunction with [EOSIO SDK for Java](https://github.com/EOSIO/eosio-java) as a provider plugin.
 
 To use Android RPC Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
-
-**TODO** This needs to be updated when the distribution strategy is finalized.
 
 ```groovy
 implementation 'one.block:eosiojava:0.0.1'
@@ -50,7 +51,7 @@ packagingOptions {
 
 Then refresh your gradle project.
 
-Now Android RPC Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
+Now Android RPC Provider is ready for use within EOSIO SDK for Java according to the [EOSIO SDK for Java - Basic Usage instructions](https://github.com/EOSIO/eosio-java/tree/master#basic-usage).
 
 ## Direct Usage
 
@@ -59,7 +60,8 @@ If you wish to use Android RPC Provider directly, its public methods can be call
 ```java
 // Synchronous call
 EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
-                    "https://mytestblockchain.net/");
+    "https://mytestblockchain.net/"
+);
 GetRawAbiRequest request = new GetRawAbiRequest("eosio.token");
 GetRawAbiResponse response = rpcProvider.getRawAbi(request);
 String abi = response.getAbi();
@@ -67,7 +69,8 @@ String abiHash = response.getAbiHash();
 
 // Asynchronous call
 final EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
-        "https://mytestblockchain.net/");
+    "https://mytestblockchain.net/"
+);
 GetBlockRequest[] request = { new GetBlockRequest("25260032") };
 
 AsyncTask<GetBlockRequest, Void, GetBlockResponse> asyncTask = new AsyncTask<GetBlockRequest, Void, GetBlockResponse>() {
@@ -94,9 +97,42 @@ AsyncTask<GetBlockRequest, Void, GetBlockResponse> asyncTask = new AsyncTask<Get
 }.execute(request);
 ```
 
+Please note that only the following five RPC endpoints have proper response marshalling:
+
+```java
+ Call<GetInfoResponse> getInfo();
+ Call<GetBlockResponse> getBlock(@Body GetBlockRequest getBlockRequest);
+ Call<GetRawAbiResponse> getRawAbi(@Body GetRawAbiRequest getRawAbiRequest);
+ Call<GetRequiredKeysResponse> getRequiredKeys(@Body GetRequiredKeysRequest getRequiredKeysRequest);
+ Call<PushTransactionResponse> pushTransaction(@Body PushTransactionRequest pushTransactionRequest);
+```
+
+The remaining endpoints accept a `RequestBody` as the request object and return a raw JSON string as the response. We aim to continue improving response marshalling for all endpoints, and we invite you to [help us improve](https://github.com/EOSIO/eosio-java-android-rpc-provider/issues/22) responses too. Check [EosioJavaRpcProviderImpl](https://github.com/EOSIO/eosio-java-android-rpc-provider/blob/master/eosiojavarpcprovider/src/main/java/one/block/eosiojavarpcprovider/implementations/EosioJavaRpcProviderImpl.java) for more details.
+
+Here is an example demonstrating how to call RPC endpoints and handle the raw JSON string responses returned:
+
+```java
+EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl("https://mytestblockchain.net/");
+
+String getCurrentBalanceRequestJSON = "{\n" +
+            "\t\"code\" : \"eosio.token\"\n" +
+            "\t\"account\" : \"test_account\"\n" +
+            "}";
+RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), getCurrentBalanceRequestJSON);
+String response = rpcProvider.getCurrencyBalance(requestBody);
+JSONArray jsonArray = new JSONArray(response);
+String balance = jsonArray.getString(0);
+```
+
+## Android Example App
+
+If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
+
 ## Want to help?
 
 Interested in contributing? That's awesome! Here are some [Contribution Guidelines](./CONTRIBUTING.md) and the [Code of Conduct](./CONTRIBUTING.md#conduct).
+
+We're always looking for ways to improve EOSIO SDK for Java: Android RPC Provider. Check out our [#enhancement Issues](/../../issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement) for ways you can pitch in.
 
 ## License
 
