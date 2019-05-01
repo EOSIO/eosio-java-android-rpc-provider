@@ -97,6 +97,33 @@ AsyncTask<GetBlockRequest, Void, GetBlockResponse> asyncTask = new AsyncTask<Get
 }.execute(request);
 ```
 
+Please note that only 5 RPC endpoints below has response marshalling supported:
+
+```java
+ Call<GetInfoResponse> getInfo();
+ Call<GetBlockResponse> getBlock(@Body GetBlockRequest getBlockRequest);
+ Call<GetRawAbiResponse> getRawAbi(@Body GetRawAbiRequest getRawAbiRequest);
+ Call<GetRequiredKeysResponse> getRequiredKeys(@Body GetRequiredKeysRequest getRequiredKeysRequest);
+ Call<PushTransactionResponse> pushTransaction(@Body PushTransactionRequest pushTransactionRequest);
+```
+
+The rest endpoints accept `RequestBody` as request object and return raw JSON string content as response. We aim to continue improving response marshalling for all endpoints and we invite you to [help us improve](https://github.com/EOSIO/eosio-java-android-rpc-provider/issues/22) responses too. Check [EosioJavaRpcProviderImpl](https://github.com/EOSIO/eosio-java-android-rpc-provider/blob/master/eosiojavarpcprovider/src/main/java/one/block/eosiojavarpcprovider/implementations/EosioJavaRpcProviderImpl.java) for more detail. 
+
+This is an example how to call/handle a Rpc endpoint which returns raw JSON string response.
+
+```java
+EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl("https://mytestblockchain.net/");
+
+String getCurrentBalanceRequestJSON = "{\n" +
+            "\t\"code\" : \"eosio.token\"\n" +
+            "\t\"account\" : \"test_account\"\n" +
+            "}";
+RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), getCurrentBalanceRequestJSON);
+String response = rpcProvider.getCurrencyBalance(requestBody);
+JSONArray jsonArray = new JSONArray(response);
+String balance = jsonArray.getString(0);
+```
+
 ## Android Example App
 
 If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
