@@ -45,7 +45,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavarpcprovider'
-def libraryVersion = '0.1.0'
+def libraryVersion = '0.1.1'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs

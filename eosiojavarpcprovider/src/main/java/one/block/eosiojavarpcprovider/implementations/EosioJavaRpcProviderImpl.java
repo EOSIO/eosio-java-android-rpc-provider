@@ -63,15 +63,25 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
      * @throws EosioJavaRpcProviderInitializerError thrown if the base URL passed in is null.
      */
     public EosioJavaRpcProviderImpl(@NotNull String baseURL) throws EosioJavaRpcProviderInitializerError {
+        this(baseURL, false);
+    }
+
+    /**
+     * Construct a new RPC provider instance given the base URL to use for building requests.
+     * @param baseURL Base URL to use for building requests.
+     * @param enableDebug Enable Network Log at {@link Level#BODY} level
+     * @throws EosioJavaRpcProviderInitializerError thrown if the base URL passed in is null.
+     */
+    public EosioJavaRpcProviderImpl(@NotNull String baseURL, boolean enableDebug) throws EosioJavaRpcProviderInitializerError {
         if(baseURL == null || baseURL.isEmpty()) {
             throw new EosioJavaRpcProviderInitializerError(EosioJavaRpcErrorConstants.RPC_PROVIDER_BASE_URL_EMPTY);
         }
 
         this.baseURL = baseURL;
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        if (BuildConfig.DEBUG) {
+        if (enableDebug) {
             HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-            httpLoggingInterceptor.setLevel(Level.BASIC);
+            httpLoggingInterceptor.setLevel(Level.BODY);
             httpClient.addInterceptor(httpLoggingInterceptor);
         }
 
