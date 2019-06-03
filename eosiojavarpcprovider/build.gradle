@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+//Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
 apply plugin: "com.jfrog.artifactory"
 apply plugin: 'maven-publish'
 
@@ -138,6 +139,7 @@ project.afterEvaluate {
     }
 }
 
+//Remove artifactory{} block if you are not using Artifactory
 artifactory {
     contextUrl = artifactory_contextURL
     publish {
