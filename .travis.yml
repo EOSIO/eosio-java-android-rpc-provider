@@ -76,11 +76,6 @@ before_deploy:
 
 deploy:
   - provider: script
-    script: bash scripts/veracode-scan.sh
-    on:
-      all_branches: true
-      condition: $TRAVIS_BRANCH == develop || ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH} =~ ^release\/.*$
-  - provider: script
     skip_cleanup: true
     script: "bash scripts/deploy-artifactory.sh 'android-libs-feature-local'"
     on:
