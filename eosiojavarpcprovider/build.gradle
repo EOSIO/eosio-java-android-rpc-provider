@@ -53,7 +53,7 @@ task androidJavadocs(type: Javadoc) {
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     android.libraryVariants.all { variant ->
         if (variant.name == 'release') {
-            owner.classpath += variant.getJavaCompileProvider
+            owner.classpath += variant.javaCompileProvider.get().classpath
         }
     }
     exclude '**/R.html', '**/R.*.html', '**/index.html'
@@ -140,21 +140,3 @@ project.afterEvaluate {
 }
 
 //Remove artifactory{} block if you are not using Artifactory
-artifactory {
-    contextUrl = artifactory_contextURL
-    publish {
-        repository {
-            repoKey = artifactory_repo
-
-            username = artifactory_username
-            password = artifactory_password
-        }
-        defaults {
-            publications('maven')
-            publishArtifacts = true
-
-            properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
-            publishPom = true
-        }
-    }
-}
