@@ -140,3 +140,21 @@ project.afterEvaluate {
 }
 
 //Remove artifactory{} block if you are not using Artifactory
+artifactory {
+    contextUrl = artifactory_contextURL
+    publish {
+        repository {
+            repoKey = artifactory_repo
+
+            username = artifactory_username
+            password = artifactory_password
+        }
+        defaults {
+            publications('maven')
+            publishArtifacts = true
+
+            properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']
+            publishPom = true
+        }
+    }
+}
