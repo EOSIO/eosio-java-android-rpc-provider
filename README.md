@@ -15,6 +15,7 @@ _All product and company names are trademarks™ or registered® trademarks of t
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
 - [Android Example App](#android-example-app)
+- [Updates](#updates)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -34,8 +35,8 @@ Android RPC Provider is intended to be used in conjunction with [EOSIO SDK for J
 To use Android RPC Provider with EOSIO SDK for Java in your app, add the following modules to your `build.gradle`:
 
 ```groovy
-implementation 'one.block:eosiojava:0.1.0'
-implementation 'one.block:eosiojavarpcprovider:0.1.0'
+implementation 'one.block:eosiojava:0.1.2'
+implementation 'one.block:eosiojavarpcprovider:0.1.1'
 ```
 
 You must also add the following to the `android` section of your application's `build.gradle`:
@@ -128,6 +129,12 @@ String balance = jsonArray.getString(0);
 ## Android Example App
 
 If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
+
+## Updates
+
+2/25/20
+
+Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.
 
 ## Want to help?
 
