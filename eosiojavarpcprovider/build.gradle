@@ -29,7 +29,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    api 'one.block:eosiojava:0.1.0'
+    api 'one.block:eosiojava:0.1.2'
 
     implementation 'org.jetbrains:annotations:17.0.0'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
@@ -46,14 +46,14 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavarpcprovider'
-def libraryVersion = '0.1.1'
+def libraryVersion = '0.1.2'
 
 task androidJavadocs(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
     android.libraryVariants.all { variant ->
         if (variant.name == 'release') {
-            owner.classpath += variant.javaCompile.classpath
+            owner.classpath += variant.javaCompileProvider.get().classpath
         }
     }
     exclude '**/R.html', '**/R.*.html', '**/index.html'
