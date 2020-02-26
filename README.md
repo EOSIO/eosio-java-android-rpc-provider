@@ -132,7 +132,7 @@ If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check o
 
 ## Updates
 
-2/25/20
+2/26/20
 
 Version 0.1.1 The version consumes the new eosio-java library version 0.1.2.
 
