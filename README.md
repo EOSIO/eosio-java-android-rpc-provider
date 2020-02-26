@@ -15,7 +15,7 @@ _All product and company names are trademarks™ or registered® trademarks of t
 - [Installation](#installation)
 - [Direct Usage](#direct-usage)
 - [Android Example App](#android-example-app)
-- [Updates](#updates)
+- [Releases](#releases)
 - [Want to Help?](#want-to-help)
 - [License & Legal](#license)
 
@@ -130,7 +130,7 @@ String balance = jsonArray.getString(0);
 
 If you'd like to see EOSIO SDK for Java: Android RPC Provider in action, check out our open source [Android Example App](https://github.com/EOSIO/eosio-java-android-example-app)--a working application that fetches an account's token balance and pushes a transfer action.
 
-## Updates
+## Releases
 
 2/26/20
 
