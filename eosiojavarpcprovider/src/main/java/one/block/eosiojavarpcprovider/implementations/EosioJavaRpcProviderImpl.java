@@ -28,7 +28,7 @@ import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
-import one.block.eosiojavarpcprovider.BuildConfig;
+//import one.block.eosiojavarpcprovider.BuildConfig;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcErrorConstants;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError;
