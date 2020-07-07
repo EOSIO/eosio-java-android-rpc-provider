@@ -32,6 +32,7 @@ dependencies {
     api 'one.block:eosiojava:0.1.2'
 
     implementation 'org.jetbrains:annotations:17.0.0'
+    compile group: 'org.json', name: 'json', version: '20200518'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.okhttp3:logging-interceptor:3.12.1'
@@ -39,14 +40,16 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
 
     testImplementation 'junit:junit:4.12'
-//    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    testImplementation 'org.mockito:mockito-core:3.0.0'
+    testImplementation 'org.powermock:powermock-module-junit4:2.0.2'
+    testImplementation 'org.powermock:powermock-api-mockito2:2.0.2'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.12.1'
 }
 
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavarpcprovider'
-def libraryVersion = '0.1.1'
+def libraryVersion = '0.1.1-java'
 
 task sourcesJar(type: Jar, dependsOn: classes){
     classifier = 'sources'

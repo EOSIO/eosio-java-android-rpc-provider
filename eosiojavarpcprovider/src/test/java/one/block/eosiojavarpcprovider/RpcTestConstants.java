@@ -1,4 +1,4 @@
-package one.block.testeosiojavarpcprovider;
+package one.block.eosiojavarpcprovider;
 
 public class RpcTestConstants {
 
@@ -880,3 +880,4 @@ public class RpcTestConstants {
             "    \"controlled_accounts\": []\n" +
             "}";
 }
+
