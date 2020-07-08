@@ -63,7 +63,6 @@ install:
 
 script:
   - "./gradlew clean check --stacktrace"
-  - "./gradlew clean connectedCheck --stacktrace"
 
 before_deploy:
   - echo "artifactory_username=$ARTIFACTORY_USERNAME" > gradle.properties
