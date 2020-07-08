@@ -1,8 +1,3 @@
-//apply plugin: 'java-library'
-////Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
-//apply plugin: "com.jfrog.artifactory"
-//apply plugin: 'maven-publish'
-
 plugins {
     id 'java-library'
     //Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
@@ -10,30 +5,6 @@ plugins {
     id 'maven-publish'
 
 }
-
-//android {
-//    compileSdkVersion 28
-//
-//    defaultConfig {
-//        minSdkVersion 21
-//        targetSdkVersion 28
-//        versionCode 1
-//
-//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-//
-//    }
-//
-//    buildTypes {
-//        release {
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-//        }
-//    }
-//
-//    lintOptions {
-//        abortOnError false
-//    }
-//}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -94,97 +65,6 @@ publishing {
         }
     }
 }
-
-//task androidJavadocs(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//    android.libraryVariants.all { variant ->
-//        if (variant.name == 'release') {
-//            owner.classpath += variant.javaCompileProvider.get().classpath
-//        }
-//    }
-//    exclude '**/R.html', '**/R.*.html', '**/index.html'
-//}
-//
-//task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-//    classifier = 'javadoc'
-//    from androidJavadocs.destinationDir
-//}
-//
-//task androidSourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from android.sourceSets.main.java.srcDirs
-//}
-
-//project.afterEvaluate {
-//    publishing {
-//        publications {
-//            maven(MavenPublication) {
-//                groupId libraryGroupId
-//                version libraryVersion
-//                artifactId libraryArtifactId
-//
-//                //artifact bundleReleaseAar
-//                artifact javadocJar
-//                artifact sourcesJar
-//                pom {
-//                    name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
-//                    description = 'ABIEOS Serialization Provider is intended to be used in conjunction with EOSIO SDK for Java as a provider plugin.'
-//                    url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/'
-//                    licenses {
-//                        license {
-//                            name = 'MIT License'
-//                            url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE'
-//                        }
-//                    }
-//                    developers {
-//                        developer {
-//                            id = 'block.one'
-//                            name = 'Block One'
-//                            email = 'dev@block.one'
-//                        }
-//                    }
-//                }
-//
-//                pom.withXml {
-//                    final dependenciesNode = asNode().appendNode('dependencies')
-//
-//                    ext.addDependency = { dep, scope ->
-//                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-//                            return // ignore invalid dependencies
-//
-//                        final dependencyNode = dependenciesNode.appendNode('dependency')
-//                        dependencyNode.appendNode('groupId', dep.group)
-//                        dependencyNode.appendNode('artifactId', dep.name)
-//                        dependencyNode.appendNode('version', dep.version)
-//                        dependencyNode.appendNode('scope', scope)
-//
-//                        if (!dep.transitive) {
-//                            // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-//                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-//                            exclusionNode.appendNode('groupId', '*')
-//                            exclusionNode.appendNode('artifactId', '*')
-//                        } else if (!dep.properties.excludeRules.empty) {
-//                            // Otherwise add specified exclude rules
-//                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-//                            dep.properties.excludeRules.each { rule ->
-//                                exclusionNode.appendNode('groupId', rule.group ?: '*')
-//                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
-//                            }
-//                        }
-//                    }
-//
-//                    // List all "compile" dependencies (for old Gradle)
-//                    configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
-//                    // List all "api" dependencies (for new Gradle) as "compile" dependencies
-//                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
-//                    // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
-//                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
-//                }
-//            }
-//        }
-//    }
-//}
 
 //Remove artifactory{} block if you are not using Artifactory
 artifactory {
