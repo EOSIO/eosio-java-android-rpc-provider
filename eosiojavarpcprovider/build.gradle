@@ -1,7 +1,15 @@
-apply plugin: 'java-library'
-//Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
-apply plugin: "com.jfrog.artifactory"
-apply plugin: 'maven-publish'
+//apply plugin: 'java-library'
+////Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
+//apply plugin: "com.jfrog.artifactory"
+//apply plugin: 'maven-publish'
+
+plugins {
+    id 'java-library'
+    //Remove 'com.jfrog.artifactory' plugin if you are not using Artifactory
+    id 'com.jfrog.artifactory' version '4.10.0'
+    id 'maven-publish'
+
+}
 
 //android {
 //    compileSdkVersion 28
@@ -32,12 +40,10 @@ dependencies {
     api 'one.block:eosiojava:0.1.2'
 
     implementation 'org.jetbrains:annotations:17.0.0'
-    compile group: 'org.json', name: 'json', version: '20200518'
+    compile 'com.googlecode.json-simple:json-simple:1.1.1'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.okhttp3:logging-interceptor:3.12.1'
-
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:3.0.0'
@@ -49,7 +55,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavarpcprovider'
-def libraryVersion = '0.1.1-java2'
+def libraryVersion = '0.1.1-java3'
 
 task sourcesJar(type: Jar, dependsOn: classes){
     classifier = 'sources'
@@ -67,27 +73,27 @@ artifacts {
     archives javadocJar
 }
 
-//publishing {
-//    publications {
-//        jar(MavenPublication) {
-//            from components.java
-//
-//            artifact sourcesJar {
-//                classifier "sources"
-//            }
-//
-//            artifact javadocJar {
-//                classifier "javadoc"
-//            }
-//
-//            groupId libraryGroupId
-//            version libraryVersion
-//            artifactId libraryArtifactId
-//
-//            artifact("$buildDir/libs/${artifactId}.jar")
-//        }
-//    }
-//}
+publishing {
+    publications {
+        jar(MavenPublication) {
+            from components.java
+
+            artifact sourcesJar {
+                classifier "sources"
+            }
+
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+
+            groupId libraryGroupId
+            version libraryVersion
+            artifactId libraryArtifactId
+
+            artifact("$buildDir/libs/${artifactId}.jar")
+        }
+    }
+}
 
 //task androidJavadocs(type: Javadoc) {
 //    source = android.sourceSets.main.java.srcDirs
@@ -111,73 +117,73 @@ artifacts {
 //}
 
 //project.afterEvaluate {
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId libraryGroupId
-                version libraryVersion
-                artifactId libraryArtifactId
-
-                //artifact bundleReleaseAar
-                artifact javadocJar
-                artifact sourcesJar
-                pom {
-                    name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
-                    description = 'ABIEOS Serialization Provider is intended to be used in conjunction with EOSIO SDK for Java as a provider plugin.'
-                    url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/'
-                    licenses {
-                        license {
-                            name = 'MIT License'
-                            url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE'
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = 'block.one'
-                            name = 'Block One'
-                            email = 'dev@block.one'
-                        }
-                    }
-                }
-
-                pom.withXml {
-                    final dependenciesNode = asNode().appendNode('dependencies')
-
-                    ext.addDependency = { dep, scope ->
-                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                            return // ignore invalid dependencies
-
-                        final dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dep.group)
-                        dependencyNode.appendNode('artifactId', dep.name)
-                        dependencyNode.appendNode('version', dep.version)
-                        dependencyNode.appendNode('scope', scope)
-
-                        if (!dep.transitive) {
-                            // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                            exclusionNode.appendNode('groupId', '*')
-                            exclusionNode.appendNode('artifactId', '*')
-                        } else if (!dep.properties.excludeRules.empty) {
-                            // Otherwise add specified exclude rules
-                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                            dep.properties.excludeRules.each { rule ->
-                                exclusionNode.appendNode('groupId', rule.group ?: '*')
-                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                            }
-                        }
-                    }
-
-                    // List all "compile" dependencies (for old Gradle)
-                    configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
-                    // List all "api" dependencies (for new Gradle) as "compile" dependencies
-                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
-                    // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
-                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
-                }
-            }
-        }
-    }
+//    publishing {
+//        publications {
+//            maven(MavenPublication) {
+//                groupId libraryGroupId
+//                version libraryVersion
+//                artifactId libraryArtifactId
+//
+//                //artifact bundleReleaseAar
+//                artifact javadocJar
+//                artifact sourcesJar
+//                pom {
+//                    name = 'EOSIO SDK for Java Android: ABIEOS Serialization Provider'
+//                    description = 'ABIEOS Serialization Provider is intended to be used in conjunction with EOSIO SDK for Java as a provider plugin.'
+//                    url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/'
+//                    licenses {
+//                        license {
+//                            name = 'MIT License'
+//                            url = 'https://github.com/EOSIO/eosio-java-android-abieos-serialization-provider/blob/master/LICENSE'
+//                        }
+//                    }
+//                    developers {
+//                        developer {
+//                            id = 'block.one'
+//                            name = 'Block One'
+//                            email = 'dev@block.one'
+//                        }
+//                    }
+//                }
+//
+//                pom.withXml {
+//                    final dependenciesNode = asNode().appendNode('dependencies')
+//
+//                    ext.addDependency = { dep, scope ->
+//                        if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+//                            return // ignore invalid dependencies
+//
+//                        final dependencyNode = dependenciesNode.appendNode('dependency')
+//                        dependencyNode.appendNode('groupId', dep.group)
+//                        dependencyNode.appendNode('artifactId', dep.name)
+//                        dependencyNode.appendNode('version', dep.version)
+//                        dependencyNode.appendNode('scope', scope)
+//
+//                        if (!dep.transitive) {
+//                            // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+//                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+//                            exclusionNode.appendNode('groupId', '*')
+//                            exclusionNode.appendNode('artifactId', '*')
+//                        } else if (!dep.properties.excludeRules.empty) {
+//                            // Otherwise add specified exclude rules
+//                            final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+//                            dep.properties.excludeRules.each { rule ->
+//                                exclusionNode.appendNode('groupId', rule.group ?: '*')
+//                                exclusionNode.appendNode('artifactId', rule.module ?: '*')
+//                            }
+//                        }
+//                    }
+//
+//                    // List all "compile" dependencies (for old Gradle)
+//                    configurations.compile.getDependencies().each { dep -> addDependency(dep, "compile") }
+//                    // List all "api" dependencies (for new Gradle) as "compile" dependencies
+//                    configurations.api.getDependencies().each { dep -> addDependency(dep, "compile") }
+//                    // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+//                    configurations.implementation.getDependencies().each { dep -> addDependency(dep, "runtime") }
+//                }
+//            }
+//        }
+//    }
 //}
 
 //Remove artifactory{} block if you are not using Artifactory
@@ -191,7 +197,7 @@ artifactory {
             password = artifactory_password
         }
         defaults {
-            publications('maven')
+            publications('jar')
             publishArtifacts = true
 
             properties = ['qa.level': 'basic', 'q.os': 'android', 'dev.team': 'core']

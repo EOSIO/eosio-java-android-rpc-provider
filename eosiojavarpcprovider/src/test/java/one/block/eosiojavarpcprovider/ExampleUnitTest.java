@@ -1,7 +1,8 @@
 package one.block.eosiojavarpcprovider;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import org.json.simple.*;
+import org.json.simple.parser.JSONParser;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.PrintWriter;
@@ -45,6 +46,13 @@ import static org.junit.Assert.*;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 public class ExampleUnitTest {
+
+    private JSONParser parser;
+
+    @Before
+    public void setup() {
+        this.parser = new JSONParser();
+    }
 
     @Test
     public void getInfoTest() {
@@ -366,8 +374,9 @@ public class ExampleUnitTest {
             String response = rpcProvider.getAccount(requestBody);
             assertNotNull(response);
 
-            JSONObject jsonObject = new JSONObject(response);
-            assertEquals(testAccount, jsonObject.getString("account_name"));
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+
+            assertEquals(testAccount, jsonObject.get("account_name"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getAccount(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -395,10 +404,13 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), PUSH_TRANSACTIONS_REQUEST);
             String response = rpcProvider.pushTransactions(requestBody);
             assertNotNull(response);
-            JSONArray jsonArray = new JSONArray(response);
-            assertEquals(2, jsonArray.length());
-            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", jsonArray.getJSONObject(0).getString("transaction_id"));
-            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", jsonArray.getJSONObject(1).getString("transaction_id"));
+
+            JSONArray jsonArray = (JSONArray)parser.parse(response);
+            assertEquals(2, jsonArray.size());
+            JSONObject firstObject = (JSONObject)jsonArray.get(0);
+            JSONObject secondObject = (JSONObject)jsonArray.get(1);
+            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", firstObject.get("transaction_id"));
+            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a", secondObject.get("transaction_id"));
         } catch (Exception ex) {
             fail("Should not get exception when calling pushTransactions(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -426,8 +438,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_BLOCK_HEADER_STATE_REQUEST);
             String response = rpcProvider.getBlockHeaderState(requestBody);
             assertNotNull(response);
-            JSONObject jsonObject = new JSONObject(response);
-            assertEquals("020c00e41e66ca6a0fa489c9b2df391fd06089426a3daed5e4859cebc1d41b73", jsonObject.getString("id"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals("020c00e41e66ca6a0fa489c9b2df391fd06089426a3daed5e4859cebc1d41b73", jsonObject.get("id"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getBlockHeaderState(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -455,8 +468,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_ABI_REQUEST);
             String response = rpcProvider.getAbi(requestBody);
             assertNotNull(response);
-            JSONObject jsonObject = new JSONObject(response);
-            assertEquals("eosio.token", jsonObject.getString("account_name"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals("eosio.token", jsonObject.get("account_name"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getAbi(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -484,8 +498,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CURRENT_BALANCE_REQUEST);
             String response = rpcProvider.getCurrencyBalance(requestBody);
             assertNotNull(response);
-            JSONArray jsonArray = new JSONArray(response);
-            assertEquals("1.0000 EOS", jsonArray.getString(0));
+
+            JSONArray jsonArray = (JSONArray)parser.parse(response);
+            assertEquals("1.0000 EOS", jsonArray.get(0));
         } catch (Exception ex) {
             fail("Should not get exception when calling getCurrencyBalance(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -513,9 +528,11 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CURRENT_STATS_REQUEST);
             String response = rpcProvider.getCurrencyStats(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals("100000000.0000 EOS", json.getJSONObject("EOS").getString("supply"));
-            assertEquals("10000000000.0000 EOS", json.getJSONObject("EOS").getString("max_supply"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONObject eosJsonObject = (JSONObject)jsonObject.get("EOS");
+            assertEquals("100000000.0000 EOS", eosJsonObject.get("supply"));
+            assertEquals("10000000000.0000 EOS", eosJsonObject.get("max_supply"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getCurrencyStats(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -543,10 +560,14 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_PRODUCER_REQUEST);
             String response = rpcProvider.getProducers(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(2, json.getJSONArray("rows").length());
-            assertEquals("blkproducer2", json.getJSONArray("rows").getJSONObject(0).getString("owner"));
-            assertEquals("blkproducer3", json.getJSONArray("rows").getJSONObject(1).getString("owner"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONArray rowsArray = (JSONArray)jsonObject.get("rows");
+            assertEquals(2, rowsArray.size());
+            JSONObject firstObject = (JSONObject)rowsArray.get(0);
+            JSONObject secondObject = (JSONObject)rowsArray.get(1);
+            assertEquals("blkproducer2", firstObject.get("owner"));
+            assertEquals("blkproducer3", secondObject.get("owner"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getProducers(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -574,8 +595,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_RAW_CODE_AND_ABI_REQUEST);
             String response = rpcProvider.getRawCodeAndAbi(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals("eosio.token", json.getString("account_name"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals("eosio.token", jsonObject.get("account_name"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getRawCodeAndAbi(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -603,13 +625,19 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TABLE_BY_SCOPE_REQUEST);
             String response = rpcProvider.getTableByScope(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(10, json.getJSONArray("rows").length());
-            assertEquals("eosio.token", json.getJSONArray("rows").getJSONObject(0).getString("code"));
-            assertEquals("test_account_1", json.getJSONArray("rows").getJSONObject(0).getString("scope"));
-            assertEquals("test_account_2", json.getJSONArray("rows").getJSONObject(1).getString("scope"));
-            assertEquals("test_account_7", json.getJSONArray("rows").getJSONObject(2).getString("scope"));
-            assertEquals("test_account_3", json.getJSONArray("rows").getJSONObject(3).getString("scope"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONArray jsonArray = (JSONArray)jsonObject.get("rows");
+            assertEquals(10, jsonArray.size());
+            JSONObject firstObject = (JSONObject)jsonArray.get(0);
+            JSONObject secondObject = (JSONObject)jsonArray.get(1);
+            JSONObject thirdObject = (JSONObject)jsonArray.get(2);
+            JSONObject fourthObject = (JSONObject)jsonArray.get(3);
+            assertEquals("eosio.token", firstObject.get("code"));
+            assertEquals("test_account_1", firstObject.get("scope"));
+            assertEquals("test_account_2", secondObject.get("scope"));
+            assertEquals("test_account_7", thirdObject.get("scope"));
+            assertEquals("test_account_3", fourthObject.get("scope"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getTableByScope(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -637,9 +665,12 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TABLE_ROWS_REQUEST);
             String response = rpcProvider.getTableRows(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(1, json.getJSONArray("rows").length());
-            assertEquals("1000.0000 EOS", json.getJSONArray("rows").getJSONObject(0).getString("balance"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONArray jsonArray = (JSONArray)jsonObject.get("rows");
+            assertEquals(1, jsonArray.size());
+            JSONObject firstObject = (JSONObject)jsonArray.get(0);
+            assertEquals("1000.0000 EOS", firstObject.get("balance"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getTableRows(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -667,8 +698,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CODE_REQUEST);
             String response = rpcProvider.getCode(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(500, json.getInt("code"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals(new Long(500), jsonObject.get("code"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getCode(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -696,8 +728,9 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_ACTIONS_REQUEST);
             String response = rpcProvider.getActions(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(34394836, json.getInt("last_irreversible_block"));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals(new Long(34394836), jsonObject.get("last_irreversible_block"));
         } catch (Exception ex) {
             fail("Should not get exception when calling getActions(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -710,36 +743,36 @@ public class ExampleUnitTest {
         }
     }
 
-    // Fails with: java.lang.RuntimeException: Stub!
-//    @Test
-//    public void testGetTransactionRpcCall() {
-//        MockWebServer server = new MockWebServer();
-//        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_TRANSACTION_RESPONSE));
-//
-//        try {
-//            server.start();
-//            String baseUrl = server.url("/").toString();
-//
-//            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
-//                    baseUrl);
-//
-//            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TRANSACTION_REQUEST);
-//            String response = rpcProvider.getTransaction(requestBody);
-//            assertNotNull(response);
-//            JSONObject json = new JSONObject(response);
-//            assertEquals("transaction id", json.getString("id"));
-//            assertEquals("49420058", json.getString("block_num"));
-//        } catch (Exception ex) {
-//            fail("Should not get exception when calling getTransaction(): " + ex.getLocalizedMessage()
-//                    + "\n" + getStackTraceString(ex));
-//        } finally {
-//            try {
-//                server.shutdown();
-//            } catch (Exception ex) {
-//                // No need for anything here.
-//            }
-//        }
-//    }
+    @Test
+    public void testGetTransactionRpcCall() {
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(GET_TRANSACTION_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_TRANSACTION_REQUEST);
+            String response = rpcProvider.getTransaction(requestBody);
+            assertNotNull(response);
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            assertEquals("transaction id", jsonObject.get("id"));
+            assertEquals(new Long(49420058), jsonObject.get("block_num"));
+        } catch (Exception ex) {
+            fail("Should not get exception when calling getTransaction(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+    }
 
     @Test
     public void testGetKeyAccountsRpcCall() {
@@ -756,9 +789,11 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_KEY_ACCOUNTS_REQUEST);
             String response = rpcProvider.getKeyAccounts(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(1, json.getJSONArray("account_names").length());
-            assertEquals("test_account", json.getJSONArray("account_names").getString(0));
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONArray jsonArray = (JSONArray)jsonObject.get("account_names");
+            assertEquals(1, jsonArray.size());
+            assertEquals("test_account", jsonArray.get(0));
         } catch (Exception ex) {
             fail("Should not get exception when calling getKeyAccounts(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
@@ -786,8 +821,10 @@ public class ExampleUnitTest {
             RequestBody requestBody = RequestBody.create(okhttp3.MediaType.parse("application/json; charset=utf-8"), GET_CONTROLLED_ACCOUNTS_REQUEST);
             String response = rpcProvider.getControlledAccounts(requestBody);
             assertNotNull(response);
-            JSONObject json = new JSONObject(response);
-            assertEquals(0, json.getJSONArray("controlled_accounts").length());
+
+            JSONObject jsonObject = (JSONObject)parser.parse(response);
+            JSONArray jsonArray = (JSONArray)jsonObject.get("controlled_accounts");
+            assertEquals(0, jsonArray.size());
         } catch (Exception ex) {
             fail("Should not get exception when calling getControlledAccounts(): " + ex.getLocalizedMessage()
                     + "\n" + getStackTraceString(ex));
