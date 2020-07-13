@@ -11,7 +11,9 @@ dependencies {
     api 'one.block:eosiojava:0.1.2'
 
     implementation 'org.jetbrains:annotations:17.0.0'
-    compile 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation (group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1') {
+        exclude group: 'org.hamcrest', module: 'hamcrest-core'
+    }
     api 'com.squareup.retrofit2:retrofit:2.5.0'
     api 'com.squareup.retrofit2:converter-gson:2.5.0'
     api 'com.squareup.okhttp3:logging-interceptor:3.12.1'
@@ -26,7 +28,7 @@ dependencies {
 
 def libraryGroupId = 'one.block'
 def libraryArtifactId = 'eosiojavarpcprovider'
-def libraryVersion = '0.1.1-java3'
+def libraryVersion = '0.1.2-javaver2'
 
 task sourcesJar(type: Jar, dependsOn: classes){
     classifier = 'sources'
