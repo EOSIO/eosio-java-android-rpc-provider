@@ -1,1 +1,1 @@
-include ':app', ':eosiojavarpcprovider'
+include ':eosiojavarpcprovider'
