@@ -233,7 +233,7 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
             Call<SendTransactionResponse> syncCall = this.rpcProviderApi.sendTransaction(sendTransactionRequest);
             return processCall(syncCall);
         } catch (Exception ex) {
-            throw new SendTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_PUSHING_TRANSACTION,
+            throw new SendTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_SENDING_TRANSACTION,
                     ex);
         }
     }
