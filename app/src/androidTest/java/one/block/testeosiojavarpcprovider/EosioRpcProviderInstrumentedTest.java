@@ -30,11 +30,13 @@ import one.block.eosiojava.models.rpcProvider.request.GetBlockRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRawAbiRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRequiredKeysRequest;
 import one.block.eosiojava.models.rpcProvider.request.PushTransactionRequest;
+import one.block.eosiojava.models.rpcProvider.request.SendTransactionRequest;
 import one.block.eosiojava.models.rpcProvider.response.GetBlockResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetInfoResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
+import one.block.eosiojava.models.rpcProvider.response.SendTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
 import one.block.eosiojava.models.rpcProvider.response.RpcError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
@@ -239,6 +241,85 @@ public class EosioRpcProviderInstrumentedTest {
                     "",
                     "C62A4F5C1CEF3D6D71BD000000000290AFC2D800EA3055000000405DA7ADBA0072CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB155624800A6823403EA3055000000572D3CCDCD0100AEAA4AC15CFD4500000000A8ED32323B00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C69657320686561767900");
             PushTransactionResponse response = rpcProvider.pushTransaction(request);
+            fail("Push transaction should not succeed.");
+        } catch (Exception ex) {
+            assertEquals("Error pushing transaction.", ex.getLocalizedMessage());
+            assertNotNull(ex.getCause());
+            assertEquals("Bad status code: 500 (Server Error), returned from server. Additional error information: See further error information in RPCProviderError.", ex.getCause().getMessage());
+            RPCResponseError rpcResponseError = ((EosioJavaRpcProviderCallError)ex.getCause()).getRpcResponseError();
+            assertNotNull(rpcResponseError);
+            assertEquals(new BigInteger("500"), rpcResponseError.getCode());
+            assertEquals("Internal Service Error", rpcResponseError.getMessage());
+            RpcError rpcError = rpcResponseError.getError();
+            assertNotNull(rpcError);
+            assertEquals(new BigInteger("3040005"), rpcError.getCode());
+            assertEquals("Expired Transaction", rpcError.getWhat());
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+
+    }
+
+    @Test
+    public void sendTransactionTest() {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(200).setBody(PUSH_TRANSACTION_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            List<String> signatures = new ArrayList<>();
+            signatures.add("SIG_K1_JzFA9ffefWfrTBvpwMwZi81kR6tvHF4mfsRekVXrBjLWWikg9g1FrS9WupYuoGaRew5mJhr4d39tHUjHiNCkxamtEfxi68");
+            SendTransactionRequest request = new SendTransactionRequest(signatures,
+                    0,
+                    "",
+                    "C62A4F5C1CEF3D6D71BD000000000290AFC2D800EA3055000000405DA7ADBA0072CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB155624800A6823403EA3055000000572D3CCDCD0100AEAA4AC15CFD4500000000A8ED32323B00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C69657320686561767900");
+            SendTransactionResponse response = rpcProvider.sendTransaction(request);
+            assertNotNull(response);
+            assertEquals("ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a",
+                    response.getTransactionId());
+        } catch (Exception ex) {
+            fail("Should not get exception when calling pushTransaction(): " + ex.getLocalizedMessage()
+                    + "\n" + getStackTraceString(ex));
+        } finally {
+            try {
+                server.shutdown();
+            } catch (Exception ex) {
+                // No need for anything here.
+            }
+        }
+
+    }
+
+    @Test
+    public void sendTransactionErrorTest() {
+
+        MockWebServer server = new MockWebServer();
+        server.enqueue(new MockResponse().setResponseCode(500).setBody(PUSH_TRANSACTION_ERROR_RESPONSE));
+
+        try {
+            server.start();
+            String baseUrl = server.url("/").toString();
+
+            EosioJavaRpcProviderImpl rpcProvider = new EosioJavaRpcProviderImpl(
+                    baseUrl);
+
+            List<String> signatures = new ArrayList<>();
+            signatures.add("SIG_K1_JzFA9ffefWfrTBvpwMwZi81kR6tvHF4mfsRekVXrBjLWWikg9g1FrS9WupYuoGaRew5mJhr4d39tHUjHiNCkxamtEfxi68");
+            SendTransactionRequest request = new SendTransactionRequest(signatures,
+                    0,
+                    "",
+                    "C62A4F5C1CEF3D6D71BD000000000290AFC2D800EA3055000000405DA7ADBA0072CBDD956F52ACD910C3C958136D72F8560D1846BC7CF3157F5FBFB72D3001DE4597F4A1FDBECDA6D59C96A43009FC5E5D7B8F639B1269C77CEC718460DCC19CB30100A6823403EA3055000000572D3CCDCD0143864D5AF0FE294D44D19C612036CBE8C098414C4A12A5A7BB0BFE7DB155624800A6823403EA3055000000572D3CCDCD0100AEAA4AC15CFD4500000000A8ED32323B00AEAA4AC15CFD4500000060D234CD3DA06806000000000004454F53000000001A746865206772617373686F70706572206C69657320686561767900");
+            SendTransactionResponse response = rpcProvider.sendTransaction(request);
             fail("Push transaction should not succeed.");
         } catch (Exception ex) {
             assertEquals("Error pushing transaction.", ex.getLocalizedMessage());

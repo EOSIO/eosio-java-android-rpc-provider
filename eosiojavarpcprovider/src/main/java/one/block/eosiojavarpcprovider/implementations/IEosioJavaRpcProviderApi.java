@@ -9,11 +9,13 @@ import one.block.eosiojava.models.rpcProvider.request.GetBlockRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRawAbiRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRequiredKeysRequest;
 import one.block.eosiojava.models.rpcProvider.request.PushTransactionRequest;
+import one.block.eosiojava.models.rpcProvider.request.SendTransactionRequest;
 import one.block.eosiojava.models.rpcProvider.response.GetBlockResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetInfoResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
 import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
+import one.block.eosiojava.models.rpcProvider.response.SendTransactionResponse;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -73,8 +75,17 @@ public interface IEosioJavaRpcProviderApi {
      */
     @POST("v1/chain/push_transaction")
     Call<PushTransactionResponse> pushTransaction(@Body PushTransactionRequest pushTransactionRequest);
-    //endregion
 
+    /**
+     * Retrofit POST call to "chain/send_transaction" to an EOSIO blockchain.
+     * This method gets called from {@link EosioJavaRpcProviderImpl#sendTransaction(SendTransactionRequest)} to Send transaction RPC call to broadcast a transaction to backend
+     *
+     * @param sendTransactionRequest the transaction to push with signatures.
+     * @return Executable {@link Call} to return {@link PushTransactionResponse} has the send transaction response
+     */
+    @POST("v1/chain/send_transaction")
+    Call<SendTransactionResponse> sendTransaction(@Body SendTransactionRequest sendTransactionRequest);
+    //endregion
 
     //region Extra APIs
     // Chain APIs
