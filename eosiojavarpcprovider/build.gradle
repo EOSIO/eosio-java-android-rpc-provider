@@ -34,7 +34,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'one.block:eosiojava:0.2.0-amqp9'
+    implementation 'one.block:eosiojava:0.2.0-amqp8'
 
     implementation 'org.jetbrains:annotations:17.0.0'
     api 'com.squareup.retrofit2:retrofit:2.5.0'
