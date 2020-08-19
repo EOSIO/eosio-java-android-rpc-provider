@@ -45,7 +45,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0-beta01'
 
     implementation project(':eosiojavarpcprovider')
-    implementation 'one.block:eosiojava:0.2.0-amqp9'
+    implementation 'one.block:eosiojava:0.2.0-amqp8'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
