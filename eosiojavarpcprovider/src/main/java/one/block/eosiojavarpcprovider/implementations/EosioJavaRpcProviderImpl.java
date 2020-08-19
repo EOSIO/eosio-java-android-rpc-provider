@@ -15,20 +15,19 @@ import one.block.eosiojava.error.rpcProvider.GetBlockRpcError;
 import one.block.eosiojava.error.rpcProvider.GetInfoRpcError;
 import one.block.eosiojava.error.rpcProvider.GetRawAbiRpcError;
 import one.block.eosiojava.error.rpcProvider.GetRequiredKeysRpcError;
-import one.block.eosiojava.error.rpcProvider.PushTransactionRpcError;
 import one.block.eosiojava.error.rpcProvider.RpcProviderError;
+import one.block.eosiojava.error.rpcProvider.SendTransactionRpcError;
 import one.block.eosiojava.interfaces.IRPCProvider;
 import one.block.eosiojava.models.rpcProvider.request.GetBlockRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRawAbiRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRequiredKeysRequest;
-import one.block.eosiojava.models.rpcProvider.request.PushTransactionRequest;
+import one.block.eosiojava.models.rpcProvider.request.SendTransactionRequest;
 import one.block.eosiojava.models.rpcProvider.response.GetBlockResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetInfoResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRawAbiResponse;
 import one.block.eosiojava.models.rpcProvider.response.GetRequiredKeysResponse;
-import one.block.eosiojava.models.rpcProvider.response.PushTransactionResponse;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
-import one.block.eosiojavarpcprovider.BuildConfig;
+import one.block.eosiojava.models.rpcProvider.response.SendTransactionResponse;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcErrorConstants;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderCallError;
 import one.block.eosiojavarpcprovider.error.EosioJavaRpcProviderInitializerError;
@@ -201,19 +200,18 @@ public class EosioJavaRpcProviderImpl implements IRPCProvider {
     }
 
     /**
-     * Push a given transaction to the blockchain and process the response.
-     * @param pushTransactionRequest the transaction to push with signatures.
-     * @return PushTransactionResponse on successful return.
-     * @throws PushTransactionRpcError Thrown if any errors occur calling or processing the request.
+     * Send a given transaction to the blockchain and process the response.
+     * @param sendTransactionRequest the transaction to send with signatures.
+     * @return SendTransactionResponse on successful return.
+     * @throws SendTransactionRpcError Thrown if any errors occur calling or processing the request.
      */
-    @Override
-    public @NotNull PushTransactionResponse pushTransaction(
-            PushTransactionRequest pushTransactionRequest) throws PushTransactionRpcError {
+    public @NotNull SendTransactionResponse sendTransaction(
+            SendTransactionRequest sendTransactionRequest) throws SendTransactionRpcError {
         try {
-            Call<PushTransactionResponse> syncCall = this.rpcProviderApi.pushTransaction(pushTransactionRequest);
+            Call<SendTransactionResponse> syncCall = this.rpcProviderApi.sendTransaction(sendTransactionRequest);
             return processCall(syncCall);
         } catch (Exception ex) {
-            throw new PushTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_PUSHING_TRANSACTION,
+            throw new SendTransactionRpcError(EosioJavaRpcErrorConstants.RPC_PROVIDER_ERROR_SENDING_TRANSACTION,
                     ex);
         }
     }

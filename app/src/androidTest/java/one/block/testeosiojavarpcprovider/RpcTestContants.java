@@ -50,7 +50,7 @@ public class RpcTestContants {
             + "    ]\n"
             + "}";
 
-    public static final String PUSH_TRANSACTION_RESPONSE = "{\n"
+    public static final String SEND_TRANSACTION_RESPONSE = "{\n"
             + "    \"transaction_id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
             + "    \"processed\": {\n"
             + "        \"id\": \"ae735820e26a7b771e1b522186294d7cbba035d0c31ca88237559d6c0a3bf00a\",\n"
@@ -245,7 +245,7 @@ public class RpcTestContants {
             + "    }\n"
             + "}";
 
-    public static final String PUSH_TRANSACTION_ERROR_RESPONSE = "{\n"
+    public static final String SEND_TRANSACTION_ERROR_RESPONSE = "{\n"
             + "    \"code\": 500,\n"
             + "    \"message\": \"Internal Service Error\",\n"
             + "    \"error\": {\n"
@@ -347,8 +347,8 @@ public class RpcTestContants {
             "]";
 
     public static final String PUSH_TRANSACTIONS_RESPONSE = "[" +
-            PUSH_TRANSACTION_RESPONSE + "," +
-            PUSH_TRANSACTION_RESPONSE +
+            SEND_TRANSACTION_RESPONSE + "," +
+            SEND_TRANSACTION_RESPONSE +
             "]";
 
     public static final String GET_BLOCK_HEADER_STATE_REQUEST = "{\n" +

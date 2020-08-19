@@ -78,3 +78,5 @@ lint/tmp/
 # lint/reports/
 
 gradle.properties
+
+.DS_STORE

@@ -7,7 +7,7 @@ import okhttp3.RequestBody;
 import one.block.eosiojava.models.rpcProvider.request.GetBlockRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRawAbiRequest;
 import one.block.eosiojava.models.rpcProvider.request.GetRequiredKeysRequest;
-import one.block.eosiojava.models.rpcProvider.request.PushTransactionRequest;
+import one.block.eosiojava.models.rpcProvider.request.SendTransactionRequest;
 import one.block.eosiojava.models.rpcProvider.response.RPCResponseError;
 import one.block.eosiojavarpcprovider.implementations.EosioJavaRpcProviderImpl;
 
@@ -44,9 +44,9 @@ public class EosioJavaRpcErrorConstants {
     public static final String RPC_PROVIDER_ERROR_GETTING_REQUIRED_KEYS = "Error retrieving required keys.";
 
     /**
-     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#pushTransaction(PushTransactionRequest)} returns error.
+     * Error message gets thrown if {@link EosioJavaRpcProviderImpl#sendTransaction(SendTransactionRequest)} returns error.
      */
-    public static final String RPC_PROVIDER_ERROR_PUSHING_TRANSACTION = "Error pushing transaction.";
+    public static final String RPC_PROVIDER_ERROR_SENDING_TRANSACTION = "Error sending transaction.";
 
     /**
      * Error message gets thrown if {@link EosioJavaRpcProviderImpl#pushTransactions(RequestBody)} returns error.
